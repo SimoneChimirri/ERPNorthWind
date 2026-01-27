@@ -20,18 +20,67 @@
         <div class="wrapper">
             <div id="menubar">
                 <ul id="menulist">
-                    <li class="menuitem"><i class="fa fa-house"></i>Riepilogo</li>
-                    <li class="menuitem"><i class="fa fa-list"></i>Ordini</li>
-                    <li class="menuitem"><i class="fa fa-box"></i>Prodotti e categorie</li>
-                    <li class="menuitem"><i class="fa fa-person"></i>Clienti</li>
-                    <li class="menuitem"><i class="fa fa-truck"></i>Spedizionieri e fornitori</li>
-                    <li class="menuitem"><i class="fa fa-user"></i>Dipendenti</li>
+                    <li class="menuitem"><a href="index.html"><i class="fa fa-house"></i>Riepilogo</a></li>
+                    <li class="menuitem"><a href="ordini.html"><i class="fa fa-list"></i>Ordini</a></li>
+                    <li class="menuitem"><a href="prodotti_categorie.html"><i class="fa fa-box"></i>Prodotti e categorie</a></li>
+                    <li class="menuitem"><a href="clienti.html"><i class="fa fa-person"></i>Clienti</a></li>
+                    <li class="menuitem"><a href="spedizionieri_fornitori.html"><i class="fa fa-truck"></i>Spedizionieri e fornitori</a></li>
+                    <li class="menuitem"><a href="dipendenti.html"><i class="fa fa-user"></i>Dipendenti</a></li>
                 </ul>
             </div>
             <div id="main">
                 <div id="mainHeader">
                     <h1>Gestione dipendenti</h1>
+                    <div id="toolbar">
+                        <div>
+                            <input type="text" id="searchFieldDipendenti">
+                            <input type="button" value="Cerca dipendente" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="text" id="updateFieldDipendenti">
+                            <input type="button" value="Aggiorna dipendente" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="text" id="createFieldDipendenti">
+                            <input type="button" value="Crea dipendente" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="text" id="deleteFieldDipendenti">
+                            <input type="button" value="Elimina dipendente" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="button" value="Esporta dipendenti in formato Excel" class="btn" onclick="">
+                        </div>
+                    </div>
                 </div>
+                <table id="tableDipendenti">
+                    <thead>
+                        <tr>
+                            <th data-index="EMPLOYEE_ID">Employee ID</th>
+                            <th data-index="FIRST_NAME">First Name</th>
+                            <th data-index="LAST_NAME">Last Name</th>
+                            <th data-index="TITLE">Title</th>
+                            <th data-index="BIRTH_DATE">Birth Date</th>
+                            <th data-index="HIRE_DATE">Hire Date</th>
+                            <th data-index="ADDRESS">Address</th>
+                            <th data-index="CITY">City</th>
+                            <th data-index="REGION">Region</th>
+                            <th data-index="POSTAL_CODE">Postal Code</th>
+                            <th data-index="COUNTRY">Country</th>
+                            <th data-index="HOME_PHONE">Home Phone</th>
+                            <th data-index="EXTENSION">Extension</th>
+                            <th data-index="PHOTO">Photo</th>
+                            <th data-index="NOTES">Notes</th>
+                            <th data-index="MANAGER_FIRST_NAME">Manager First Name</th>
+                            <th data-index="MANAGER_LAST_NAME">Manager Last Name</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dipendentiTableData">
+                    </tbody>
+                </table>
+            </div>
+            <div id="sidebar">
+                
             </div>
         </div>
         <div id="bottom">NorthWind</div>

@@ -20,18 +20,89 @@
         <div class="wrapper">
             <div id="menubar">
                 <ul id="menulist">
-                    <li class="menuitem"><i class="fa fa-house"></i>Riepilogo</li>
-                    <li class="menuitem"><i class="fa fa-list"></i>Ordini</li>
-                    <li class="menuitem"><i class="fa fa-box"></i>Prodotti e categorie</li>
-                    <li class="menuitem"><i class="fa fa-person"></i>Clienti</li>
-                    <li class="menuitem"><i class="fa fa-truck"></i>Spedizionieri e fornitori</li>
-                    <li class="menuitem"><i class="fa fa-user"></i>Dipendenti</li>
+                    <li class="menuitem"><a href="index.html"><i class="fa fa-house"></i>Riepilogo</a></li>
+                    <li class="menuitem"><a href="ordini.html"><i class="fa fa-list"></i>Ordini</a></li>
+                    <li class="menuitem"><a href="prodotti_categorie.html"><i class="fa fa-box"></i>Prodotti e categorie</a></li>
+                    <li class="menuitem"><a href="clienti.html"><i class="fa fa-person"></i>Clienti</a></li>
+                    <li class="menuitem"><a href="spedizionieri_fornitori.html"><i class="fa fa-truck"></i>Spedizionieri e fornitori</a></li>
+                    <li class="menuitem"><a href="dipendenti.html"><i class="fa fa-user"></i>Dipendenti</a></li>
                 </ul>
             </div>
             <div id="main">
                 <div id="mainHeader">
                     <h1>Gestione prodotti e categorie</h1>
+                    <div id="toolbar">
+                        <div>
+                            <input type="text" id="searchFieldProdotti">
+                            <input type="button" value="Cerca prodotto" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="button" value="Aggiorna prodotto" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="button" value="Crea prodotto" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="text" id="deleteFieldProdotti">
+                            <input type="button" value="Elimina prodotto" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="button" value="Esporta prodotti in formato Excel" class="btn" onclick="">
+                        </div>
+                    </div>
+                    <div id="toolbar">
+                        <div>
+                            <input type="text" id="searchFieldCategorie">
+                            <input type="button" value="Cerca categoria" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="button" value="Aggiorna categoria" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="button" value="Crea categoria" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="text" id="deleteFieldCategorie">
+                            <input type="button" value="Elimina categoria" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="button" value="Esporta categorie in formato Excel" class="btn" onclick="">
+                        </div>
+                    </div>
                 </div>
+                <table id="tableProdotti">
+                    <thead>
+                        <tr>
+                            <th data-index="PRODUCT_ID">Product ID</th>
+                            <th data-index="PRODUCT_NAME">Product Name</th>
+                            <th data-index="SUPPLIER">Supplier</th>
+                            <th data-index="CATEGORY">Category</th>
+                            <th data-index="QUANTITY_PER_UNIT">Quantity Per Unit</th>
+                            <th data-index="UNIT_PRICE">Unit Price</th>
+                            <th data-index="UNITS_IN_STOCK">Units In Stock</th>
+                            <th data-index="UNITS_ON_ORDER">Units On Order</th>
+                            <th data-index="REORDER_LEVEL">Reorder Level</th>
+                            <th data-index="DISCONTINUED">Discontinued</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prodottiTableData">
+                    </tbody>
+                </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-index="CATEGORY_ID">Category ID</th>
+                            <th data-index="CATEGORY_NAME">Category Name</th>
+                            <th data-index="DESCRIPTION">Description</th>
+                            <th data-index="PICTURE">Picture</th>
+                        </tr>
+                    </thead>
+                    <tbody id="categorieTableData">
+                    </tbody>
+                </table>
+            </div>
+            <div id="sidebar">
+                
             </div>
         </div>
         <div id="bottom">NorthWind</div>

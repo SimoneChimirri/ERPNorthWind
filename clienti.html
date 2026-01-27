@@ -20,18 +20,62 @@
         <div class="wrapper">
             <div id="menubar">
                 <ul id="menulist">
-                    <li class="menuitem"><i class="fa fa-house"></i>Riepilogo</li>
-                    <li class="menuitem"><i class="fa fa-list"></i>Ordini</li>
-                    <li class="menuitem"><i class="fa fa-box"></i>Prodotti e categorie</li>
-                    <li class="menuitem"><i class="fa fa-person"></i>Clienti</li>
-                    <li class="menuitem"><i class="fa fa-truck"></i>Spedizionieri e fornitori</li>
-                    <li class="menuitem"><i class="fa fa-user"></i>Dipendenti</li>
+                    <li class="menuitem"><a href="index.html"><i class="fa fa-house"></i>Riepilogo</a></li>
+                    <li class="menuitem"><a href="ordini.html"><i class="fa fa-list"></i>Ordini</a></li>
+                    <li class="menuitem"><a href="prodotti_categorie.html"><i class="fa fa-box"></i>Prodotti e categorie</a></li>
+                    <li class="menuitem"><a href="clienti.html"><i class="fa fa-person"></i>Clienti</a></li>
+                    <li class="menuitem"><a href="spedizionieri_fornitori.html"><i class="fa fa-truck"></i>Spedizionieri e fornitori</a></li>
+                    <li class="menuitem"><a href="dipendenti.html"><i class="fa fa-user"></i>Dipendenti</a></li>
                 </ul>
             </div>
             <div id="main">
                 <div id="mainHeader">
                     <h1>Gestione clienti</h1>
+                    <div id="toolbar">
+                        <div>
+                            <input type="text" id="searchFieldClienti">
+                            <input type="button" value="Cerca cliente" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="text" id="updateFieldClienti">
+                            <input type="button" value="Aggiorna cliente" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="text" id="createFieldClienti">
+                            <input type="button" value="Crea cliente" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="text" id="deleteFieldClienti">
+                            <input type="button" value="Elimina cliente" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="button" value="Esporta clienti in formato Excel" class="btn" onclick="">
+                        </div>
+                    </div>
                 </div>
+                <table id="tableClienti">
+                    <thead>
+                        <tr>
+                            <th data-index="CUSTOMER_ID">Customer ID</th>
+                            <th data-index="CUSTOMER_CODE">Customer Code</th>
+                            <th data-index="COMPANY_NAME">Company Name</th>
+                            <th data-index="CONTACT_NAME">Contact Name</th>
+                            <th data-index="CONTACT_TITLE">Contact Title</th>
+                            <th data-index="ADDRESS">Address</th>
+                            <th data-index="CITY">City</th>
+                            <th data-index="REGION">Region</th>
+                            <th data-index="POSTAL_CODE">Postal Code</th>
+                            <th data-index="COUNTRY">Country</th>
+                            <th data-index="PHONE">Phone</th>
+                            <th data-index="FAX">Fax</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientiTableData">
+                    </tbody>
+                </table>
+            </div>
+            <div id="sidebar">
+                
             </div>
         </div>
         <div id="bottom">NorthWind</div>

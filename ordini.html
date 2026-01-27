@@ -20,18 +20,63 @@
         <div class="wrapper">
             <div id="menubar">
                 <ul id="menulist">
-                    <li class="menuitem"><i class="fa fa-house"></i>Riepilogo</li>
-                    <li class="menuitem"><i class="fa fa-list"></i>Ordini</li>
-                    <li class="menuitem"><i class="fa fa-box"></i>Prodotti e categorie</li>
-                    <li class="menuitem"><i class="fa fa-person"></i>Clienti</li>
-                    <li class="menuitem"><i class="fa fa-truck"></i>Spedizionieri e fornitori</li>
-                    <li class="menuitem"><i class="fa fa-user"></i>Dipendenti</li>
+                    <li class="menuitem"><a href="index.html"><i class="fa fa-house"></i>Riepilogo</a></li>
+                    <li class="menuitem"><a href="ordini.html"><i class="fa fa-list"></i>Ordini</a></li>
+                    <li class="menuitem"><a href="prodotti_categorie.html"><i class="fa fa-box"></i>Prodotti e categorie</a></li>
+                    <li class="menuitem"><a href="clienti.html"><i class="fa fa-person"></i>Clienti</a></li>
+                    <li class="menuitem"><a href="spedizionieri_fornitori.html"><i class="fa fa-truck"></i>Spedizionieri e fornitori</a></li>
+                    <li class="menuitem"><a href="dipendenti.html"><i class="fa fa-user"></i>Dipendenti</a></li>
                 </ul>
             </div>
             <div id="main">
                 <div id="mainHeader">
                     <h1>Gestione ordini</h1>
+                    <div id="toolbar">
+                        <div>
+                            <input type="text" id="searchFieldOrdini">
+                            <input type="button" value="Cerca ordine" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="button" value="Aggiorna ordine" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="button" value="Crea ordine" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="text" id="deleteFieldOrdini">
+                            <input type="button" value="Elimina ordine" class="btn" onclick="">
+                        </div>
+                        <div>
+                            <input type="button" value="Esporta ordini in formato Excel" class="btn" onclick="">
+                        </div>
+                    </div>
                 </div>
+                <table id="tableOrdini">
+                    <thead>
+                        <tr>
+                            <th data-index="ORDER_ID">Order ID</th>
+                            <th data-index="CUSTOMER">Customer</th>
+                            <th data-index="EMPLOYEE_FIRST_NAME">Employee First Name</th>
+                            <th data-index="EMPLOYEE_LAST_NAME">Employee Last Name</th>
+                            <th data-index="ORDER_DATE">Order Date</th>
+                            <th data-index="REQUIRED_DATE">Required Date</th>
+                            <th data-index="SHIPPED_DATE">Shipped Date</th>
+                            <th data-index="SHIPPER">Shipper</th>
+                            <th data-index="FREIGHT">Freight</th>
+                            <th data-index="SHIP_NAME">Ship Name</th>
+                            <th data-index="SHIP_ADDRESS">Ship Address</th>
+                            <th data-index="SHIP_CITY">Ship City</th>
+                            <th data-index="SHIP_REGION">Ship Region</th>
+                            <th data-index="SHIP_POSTAL_CODE">Ship Postal Code</th>
+                            <th data-index="SHIP_COUNTRY">Ship Country</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableOrdiniData">
+                    </tbody>
+                </table>
+            </div>
+            <div id="sidebar">
+
             </div>
         </div>
         <div id="bottom">NorthWind</div>

@@ -123,3 +123,75 @@ input.btn{
     padding: 0;
 }
 
+.menuitem{
+    background-color: #f1f1f1;
+    border: 1px solid #909090;
+    list-style-type: none;
+    padding: 6px;
+    cursor: pointer;
+}
+
+.menuitem:hover{
+    background-color: white;
+}
+
+.menuitem.active{
+    background-color: #616161;
+    color: white;
+    font-weight: bold;
+}
+
+.menuitem i.fa{
+    margin-right: 10px;
+}
+
+input.invalid:focus, select.invalid:focus{
+    outline: 0;
+    box-shadow: 0 0 0 0.2em rgba(220, 53, 69, .25);
+    margin-bottom: 0;
+}
+
+.invalid-feedback{
+    width: 100%;
+    font-size: 80%;
+    color: #dc3545;
+    margin-bottom: 10px;
+}
+
+tr:hover > td, tr.selected > td{
+    background-color: #999;
+    cursor: pointer;
+    color: #fcfcfc;
+    border: 1px solid #fcfcfc;
+}
+
+#mainHeader{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
+#mainHeader > div > input:nth-child(1){
+    width: auto;
+    margin: 4px;
+}
+
+#toolbar{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#toolbar > div > input[type=text]{
+    width: 256px;
+}
+
+#toolbar > div > input[type=button]{
+    width: auto;
+    margin: auto 4px;
+    margin-bottom: 20px;
+}
+
