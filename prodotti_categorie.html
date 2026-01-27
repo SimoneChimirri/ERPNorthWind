@@ -102,7 +102,58 @@
                 </table>
             </div>
             <div id="sidebar">
-                
+                <h3>Form Prodotti:</h3>
+                <form action="" method="POST" id="formProdotti">
+                    <label for="PRODUCT_ID">Product ID:</label>
+                    <input type="text" id="productID" name="PRODUCT_ID" readonly><br>
+
+                    <label for="PRODUCT_NAME">Product Name:</label>
+                    <input type="text" id="productName" name="PRODUCT_NAME"><br>
+
+                    <label for="SUPPLIER_ID">Supplier ID:</label>
+                    <input type="number" id="supplierID" name="SUPPLIER_ID"><br>
+
+                    <label for="CATEGORY_ID">Category ID:</label>
+                    <input type="number" id="categoryID" name="CATEGORY_ID"><br>
+
+                    <label for="QUANTITY_PER_UNIT">Quantity Per Unit:</label>
+                    <input type="text" id="quantityPerUnit" name="QUANTITY_PER_UNIT"><br>
+
+                    <label for="UNIT_PRICE">Unit Price:</label>
+                    <input type="number" id="unitPrice" name="UNIT_PRICE"><br>
+
+                    <label for="UNITS_IN_STOCK">Units In Stock:</label>
+                    <input type="number" id="unitsInStock" name="UNITS_IN_STOCK"><br>
+
+                    <label for="UNITS_ON_ORDER">Units On Order:</label>
+                    <input type="number" id="unitsOnOrder" name="UNITS_ON_ORDER"><br>
+
+                    <label for="REORDER_LEVEL">Reorder Level:</label>
+                    <input type="number" id="reorderLevel" name="REORDER_LEVEL"><br>
+
+                    <label for="DISCONTINUED">Discontinued:</label>
+                    <input type="checkbox" id="discontinued" name="DISCONTINUED"><br>
+
+                    <input type="submit" value="Salva" class="btn">
+                    <input type="reset" value="Cancella" class="btn">
+                </form>
+                <h3>Form Categorie:</h3>
+                <form action="" method="POST" id="formCategorie">
+                    <label for="CATEGORY_ID">Category ID:</label>
+                    <input type="text" id="categoryIDCat" name="CATEGORY_ID" readonly><br>
+
+                    <label for="CATEGORY_NAME">Category Name:</label>
+                    <input type="text" id="categoryName" name="CATEGORY_NAME"><br>
+
+                    <label for="DESCRIPTION">Description:</label>
+                    <input type="text" id="description" name="DESCRIPTION"><br>
+
+                    <label for="PICTURE">Picture:</label>
+                    <input type="text" id="picture" name="PICTURE"><br>
+
+                    <input type="submit" value="Salva" class="btn">
+                    <input type="reset" value="Cancella" class="btn">
+                </form>
             </div>
         </div>
         <div id="bottom">NorthWind</div>
