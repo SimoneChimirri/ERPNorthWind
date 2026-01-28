@@ -41,7 +41,6 @@ function validateFormClienti(fieldDaValidare){
             case "CONTACT_NAME":
             case "ADDRESS":
             case "CITY":
-            case "POSTAL_CODE":
             case "COUNTRY":
             case "PHONE":
                 if(!fieldValue || fieldValue === ""){
@@ -322,7 +321,7 @@ function caricaClienti(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaClienti = JSON.parse(httpReq.responseText);
-                for(var i=listaClienti.length; i > 0; i++){
+                for(var i=listaClienti.length; i > 0; i--){
                     aggiungiRigaTableClienti(listaClienti[i-1]);
                 }
                 console.info("Caricamento dei clienti avvenuto con successo");
