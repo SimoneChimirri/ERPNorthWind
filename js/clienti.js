@@ -1,3 +1,5 @@
+var selectedRow;
+
 function validateFormClienti(fieldDaValidare){
     var form = document.getElementById("formClienti");
 
@@ -81,7 +83,7 @@ function handlerFormClientiSubmitButtonClick(event){
         for(var i=0; i < formClientiFields.length; i++){
             var fieldIterato = formClientiFields[i];
 
-            if(fieldIterato.tagName.toUpperCase() == 'SELECT'){
+            if(fieldIterato.tagName.toUpperCase() == "SELECT"){
                 valori[fieldIterato.name] = fieldIterato.options[fieldIterato.selectedIndex].innerText;
             } else if(fieldIterato.type === "date"){
                 var dateValue = fieldIterato.valueAsDate;
@@ -120,7 +122,7 @@ function handlerFormClientiSubmitButtonClick(event){
             })
         } else{
             aggiungiOAggiornaClienteSuFile(valori, function(clienteAggiunto){
-                aggiungiRigaTableCliente(giocatoreAggiunto);
+                aggiungiRigaTableClienti(clienteAggiunto);
                 document.getElementById("formClienti").reset();
             })
         }
@@ -138,19 +140,6 @@ submitButton.addEventListener("click", handlerFormClientiSubmitButtonClick);
 function handlerFieldFormClientiChange(event){
     validateFormClienti(this.name);
 }
-       
-function isInt(value){
-    try {
-        if (isNaN(value)){
-            return false;
-        }
-        var x = parseFloat(value);
-        return Math.floor(x) === x;
-    } catch (e) {
-        return false;
-    }
-}
-
 for(var indiceFormField = 0; indiceFormField < formClientiFields.length; indiceFormField ++){
     formClientiFields[indiceFormField].addEventListener("input", handlerFieldFormClientiChange);
     formClientiFields[indiceFormField].addEventListener("blur", handlerFieldFormClientiChange);
@@ -195,7 +184,7 @@ function aggiornaRigaTableClienti(valori){
     var headerFieldList = tableClienti.tHead.getElementsByTagName("th");
 
     for(var i=0; i < headerFieldList.length; i++){
-        var fieldName = headerFieldList.getAttribute("data-index");
+        var fieldName = headerFieldList[i].getAttribute("data-index");
 
         if(fieldName && fieldName !== ""){
             if(valori[fieldName]){
@@ -235,7 +224,7 @@ function handlerTableClientiRowClick(event){
     selectedRow = tr;
 
     var tDataList = tr.querySelectorAll("td");
-    var headerFieldList = tableClienti.tHead.getElementsByTagName("th");
+    var headerFieldList = document.getElementById("tableClienti").tHead.getElementsByTagName("th");
     var form = document.getElementById("formClienti");
 
     for(var i = 0; i < headerFieldList.length; i++){
@@ -243,12 +232,7 @@ function handlerTableClientiRowClick(event){
         if(fieldName && fieldName!== ""){
             var valore = tDataList[i].innerText;
             var formField = form[fieldName];
-
-            if(fieldName === "CUSTOMER_CODE"){
-                if(!isInt(valore)){
-                    valore = "";
-                }
-            } else if(fieldName === "CONTACT_TITLE"){
+            if(fieldName === "CONTACT_TITLE"){
                 if(valore && valore != null){
                     var selectOptions = formField.options;
                     for(var j=0; j < selectOptions.length; j++){
@@ -260,7 +244,7 @@ function handlerTableClientiRowClick(event){
                 }
             }
 
-            form[fieldName].value = valore;
+            formField.value = valore;
         }
     }
 
@@ -295,7 +279,7 @@ function handlerTableClientiDeleteButtonClick(event){
     httpReq.send();
 }
 
-document.getElementById("tableGiocatori").tBodies[0].getElementsByTagName("i")[0];
+document.getElementById("tableClienti").tBodies[0].getElementsByTagName("i")[0];
 
 function ricercaClienti(){
     var valoreDaRicercare = document.getElementById("searchFieldClienti").value;
