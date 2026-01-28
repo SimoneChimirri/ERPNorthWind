@@ -37,6 +37,19 @@ function validateFormClienti(fieldDaValidare){
 
         switch(fieldDaValidare){
             case "CUSTOMER_CODE":
+            case "COMPANY_NAME":
+            case "CONTACT_NAME":
+            case "ADDRESS":
+            case "CITY":
+            case "POSTAL_CODE":
+            case "COUNTRY":
+            case "PHONE":
+                if(!fieldValue || fieldValue === ""){
+                    addErrorMessage(fieldElement, "Campo richiesto");
+                    isCampoValid = false;
+                } else{
+                    removeErrorMessage(fieldElement);
+                }
                 break;
         }
 
@@ -123,40 +136,203 @@ var submitButton = document.getElementById("formClienti").querySelectorAll('inpu
 
 submitButton.addEventListener("click", handlerFormClientiSubmitButtonClick);
 
-function handlerFormGiocatoriChange(event){
+function handlerFieldFormClientiChange(event){
     validateFormClienti(this.name);
 }
-
-function formatDate(d){
-            function pad(s){ return (s < 10) ? '0' + s : s;}
-
-            return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join("-");
+       
+function isInt(value){
+    try {
+        if (isNaN(value)){
+            return false;
         }
-
-function aggiungiRigaTableCliente(){
-
+        var x = parseFloat(value);
+        return Math.floor(x) === x;
+    } catch (e) {
+        return false;
+    }
 }
 
-function aggiornaRigaTableClienti(){
+for(var indiceFormField = 0; indiceFormField < formClientiFields.length; indiceFormField ++){
+    formClientiFields[indiceFormField].addEventListener("input", handlerFieldFormClientiChange);
+    formClientiFields[indiceFormField].addEventListener("blur", handlerFieldFormClientiChange);
+}
 
+
+function aggiungiRigaTableClienti(valori){
+
+    var tr = document.createElement("tr");
+
+    var tableClienti = document.getElementById("tableClienti");
+
+    var headerFieldList = tableClienti.tHead.getElementsByTagName("th");
+
+    for(var i = 0; i < headerFieldList.length; i++){
+        var fieldName = headerFieldList[i].getAttribute("data-index");
+        var td = document.createElement("td");
+
+        if(fieldName){
+            if(valori[fieldName]){
+                td.innerHTML =valori[fieldName];
+            }
+        } else{
+            var iEl = document.createElement("i");
+            iEl.classList.add("fa");
+            iEl.classList.add("fa-trash");
+            iEl.style["font-size"]="16px";
+            iEl.addEventListener("click", handlerTableClientiDeleteButtonClick);
+            td.appendChild(iEl);
+        }
+        tr.appendChild(td);
+    }
+
+    tableClienti.tBodies[0].insertBefore(tr, tableClienti.tBodies[0].firstElementChild);
+}
+
+function aggiornaRigaTableClienti(valori){
+
+    var tr = selectedRow;
+    var tDataList = tr.querySelectorAll("td");
+    var tableClienti = document.getElementById("tableClienti");
+    var headerFieldList = tableClienti.tHead.getElementsByTagName("th");
+
+    for(var i=0; i < headerFieldList.length; i++){
+        var fieldName = headerFieldList.getAttribute("data-index");
+
+        if(fieldName && fieldName !== ""){
+            if(valori[fieldName]){
+                tDataList[i].innerHTML = valori[fieldName];
+            } else{
+                tDataList[i].innerHTML = "";
+            }
+        }
+    }
 }
 
 function handlerTableClientiRowClick(event){
+    event.stopPropagation();
+    var target = event.target;
+
+    if(target.querySelectorAll("i").length > 0){
+        return;
+    }
+
+    var tBody = document.getElementById("tableClienti").tBodies[0];
+
+    var previousSelectedElement = tBody.querySelectorAll("tr.selected");
+
+    if(previousSelectedElement.length > 0){
+        previousSelectedElement[0].classList.remove("selected");
+    }
+
+    var tr;
+
+    if(target.tagName.toUpperCase() === "TD"){
+        tr = target.parentNode;
+    } else{
+        tr = target;
+    }
+
+    tr.classList.add("selected");
+    selectedRow = tr;
+
+    var tDataList = tr.querySelectorAll("td");
+    var headerFieldList = tableClienti.tHead.getElementsByTagName("th");
+    var form = document.getElementById("formClienti");
+
+    for(var i = 0; i < headerFieldList.length; i++){
+        var fieldName = headerFieldList[i].getAttribute("data-index");
+        if(fieldName && fieldName!== ""){
+            var valore = tDataList[i].innerText;
+            var formField = form[fieldName];
+
+            if(fieldName === "CUSTOMER_CODE"){
+                if(!isInt(valore)){
+                    valore = "";
+                }
+            } else if(fieldName === "CONTACT_TITLE"){
+                if(valore && valore != null){
+                    var selectOptions = formField.options;
+                    for(var j=0; j < selectOptions.length; j++){
+                        if(selectOptions[j].innerText === valore){
+                            valore = selectOptions[j].value;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            form[fieldName].value = valore;
+        }
+    }
 
 }
 
 document.getElementById("tableClienti").tBodies[0].addEventListener("click", handlerTableClientiRowClick);
 
 function handlerTableClientiDeleteButtonClick(event){
+    event.stopPropagation();
+    var target = event.target;
 
+    var tr = target.parentNode.parentNode;
+
+    var customerId = tr.firstElementChild.innerText;
+
+    var httpReq = new XMLHttpRequest();
+
+    httpReq.onreadystatechange = function(){
+        if(httpReq.readyState === 4){
+            if(httpReq.status === 200){
+                tr.parentNode.removeChild(tr);
+                console.info("Eliminazione avvenuta con successo");
+            } else{
+                console.error(httpReq.responseText);
+                alert("Errore durante l'eliminazione del cliente");
+            }
+        }
+    }
+
+    httpReq.open("DELETE", "json/clienti.json?CUSTOMER_ID="+customerId);
+
+    httpReq.send();
 }
 
 document.getElementById("tableGiocatori").tBodies[0].getElementsByTagName("i")[0];
 
 function ricercaClienti(){
+    var valoreDaRicercare = document.getElementById("searchFieldClienti").value;
 
+    var rows = document.getElementById("tableClienti").tBodies[0].querySelectorAll("tr");
+
+    for(var i=0; i < rows.length; i++){
+        if(!valoreDaRicercare || valoreDaRicercare===""){
+            rows[i].style.display = "";
+        } else if(rows[i].innerText.toLowerCase().indexOf(valoreDaRicercare) !== -1){
+            rows[i].style.display = "";
+        } else{
+            rows[i].style.display = "none";
+        }
+    }
 }
 
 function caricaClienti(){
-    
+
+    var httpReq = new XMLHttpRequest();
+
+    httpReq.onreadystatechange = function(){
+        if(httpReq.readyState === 4){
+            if(httpReq.status === 200){
+                var listaClienti = JSON.parse(httpReq.responseText);
+                for(var i=listaClienti.length; i > 0; i++){
+                    aggiungiRigaTableClienti(listaClienti[i-1]);
+                }
+                console.info("Caricamento dei clienti avvenuto con successo");
+            } else{
+                console.error(httpReq.responseText);
+                alert("Errore durante il caricamento dei clienti");
+            }
+        }
+    }
+
+    httpReq.open("GET","json/clienti.json");
+    httpReq.send();
 }
