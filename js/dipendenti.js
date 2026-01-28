@@ -190,16 +190,29 @@ function aggiungiRigaTableDipendenti(valori){
 
         if(fieldName){
             if(valori[fieldName]){
-                td.innerHTML = valori[fieldName];
-            } else{
+                if(fieldName === "MANAGER_FIRSTNAME" || fieldName === "MANAGER_LASTNAME"){
+                    var dipendentiData = JSON.parse(localStorage.getItem("dipendenti")) || [];
+                    var managerId1 = valori["MANAGER_FIRSTNAME"];
+                    var managerId2 = valori["MANAGER_LASTNAME"];
+                    for(var k=0; k < dipendentiData.length; k++){
+                        if(dipendentiData[k].LASTNAME == managerId2 || dipendentiData[k].FIRSTNAME == managerId1){
+                            td.innerHTML = dipendentiData[k].EMPLOYEE_ID;
+                            break;
+                        }
+                    }
+                } else{
+                    td.innerHTML = valori[fieldName];
+                }
+            } 
+        } else{
                 var iEl = document.createElement("i");
                 iEl.classList.add("fa");
                 iEl.classList.add("fa-trash");
                 iEl.style["font-size"] = "16px";
-                iEl.addEventListener("click",handlerTableDipendentiDeleteButtonClick);
+                iEl.addEventListener("click", handlerTableDipendentiDeleteButtonClick);
                 td.appendChild(iEl);
-            }
         }
+        
 
         tr.appendChild(td);
     }
@@ -238,9 +251,13 @@ function handlerTableDipendentiRowClick(event){
         return;
     }
 
-    var tBody = document.getElementById("tableDipendnti").tBodies[0];
+    var tBody = document.getElementById("tableDipendenti").tBodies[0];
 
     var previousSelectedElement = tBody.querySelectorAll("tr.selected");
+
+    if(previousSelectedElement.length > 0){
+        previousSelectedElement[0].classList.remove("selected");
+    }
 
     if(target.tagName.toUpperCase() === "TD"){
         tr = target.parentNode;
@@ -252,7 +269,7 @@ function handlerTableDipendentiRowClick(event){
     selectedRow = tr;
 
     var tDataList = tr.querySelectorAll("td");
-    var headerFieldList = tableDipendenti.tHead.getElementsByTagName("th");
+    var headerFieldList = document.getElementById("tableDipendenti").tHead.getElementsByTagName("th");
     var form = document.getElementById("formDipendenti");
 
     for(var i=0; i < headerFieldList.length; i++){
@@ -265,9 +282,9 @@ function handlerTableDipendentiRowClick(event){
                 if(valore !== ""){
                     var splittedStringDate = valore.split("-");
 
-                    valore = "19" + splittedStringDate[2] + splittedStringDate[1] + splittedStringDate[0];
+                    valore = "19" + splittedStringDate[2] + "-" + splittedStringDate[1] + "-" + splittedStringDate[0];
                 }
-            } else if(fieldName === "TITLE" || fieldName == "TITLE_OF_COURTESY"){
+            } else if(fieldName === "TITLE" || fieldName === "TITLE_OF_COURTESY"){
                 if(valore && valore != null){
                     var selectOptions = formField.options;
                     for(var j=0; j < selectOptions.length; j++){
@@ -279,10 +296,10 @@ function handlerTableDipendentiRowClick(event){
                 }
             } else if(fieldName === "MANAGER_FIRSTNAME" || fieldName === "MANAGER_LASTNAME"){
                 if(valore && valore != null){
-                    var managerId = null;
+                    var managerId = "";
                     var dipendentiData = JSON.parse(localStorage.getItem("dipendenti")) || [];
                     for(var k=0; k < dipendentiData.length; k++){
-                        if((dipendentiData[k].FIRSTNAME === tDataList[i].innerText && dipendentiData[k].LASTNAME === tDataList[i].innerText)){
+                        if((dipendentiData[k].FIRSTNAME === tDataList[i].innerText || dipendentiData[k].LASTNAME === tDataList[i].innerText)){
                             managerId = dipendentiData[k].EMPLOYEE_ID;
                             break;
                         }
@@ -290,9 +307,12 @@ function handlerTableDipendentiRowClick(event){
                     valore = managerId;
                 }
                 fieldName = "MANAGER_ID";
+                formField = form[fieldName];
             }
 
-            form[fieldName].value = valore;
+            if(formField){
+                formField.value = valore;
+            }
         }
     }
 
@@ -301,13 +321,70 @@ function handlerTableDipendentiRowClick(event){
 function handlerTableDipendentiDeleteButtonClick(event){
     event.stopPropagation();
 
+    var target = event.target;
+    var tr = target.parentNode.parentNode;
+
+    var EmployeeId = tr.firstElementChild.innerText;
+
+    var httpReq = new XMLHttpRequest();
+
+    httpReq.onreadystatechange = function(){
+        if(httpReq.readyState === 4){
+            if(httpReq.status === 200){
+                tr.parentNode.removeChild(tr);
+                console.info("Eliminazione avvenuta con successo");
+            } else{
+                console.error(httpReq.responseText);
+                alert("Errore durante l'eliminazione del dipendente");
+            }
+        }
+    }
+
+    httpReq.open("DELETE", "json/dipendenti.json?EMPLOYEE_ID?="+EmployeeId);
+    httpReq.send();
 
 }
 
 function ricercaDipendenti(){
 
+    var valoreDaRicercare = document.getElementById("searchFieldGiocatori").value;
+
+    var rows = document.getElementById("tableGiocatori").tBodies[0].querySelectorAll("tr");
+
+    for(var i=0; i < rows.length; i++){
+        if(!valoreDaRicercare || valoreDaRicercare === ""){
+            rows[i].style.display = "";
+        } else if(rows[i].innerText.toLowerCase().indexOf(valoreDaRicercare) !== -1){
+            rows[i].style.display = "";
+        } else{
+            rows[i].style.display = "none";
+        }
+    }
+
 }
 
 function caricaDipendenti(){
+
+    var httpReq = new XMLHttpRequest();
+
+    httpReq.onreadystatechange = function(){
+        if(httpReq.readyState === 4){
+            if(httpReq.status === 200){
+                var listaDipendenti = JSON.parse(httpReq.responseText);                
+                localStorage.setItem("dipendenti", JSON.stringify(listaDipendenti));        
+                for(var i=listaDipendenti.length; i > 0; i--){
+                    aggiungiRigaTableDipendenti(listaDipendenti[i-1]);
+                }
+                console.info("Caricamento avvenuto con successo");
+            } else{
+                console.error(httpReq.responseText);
+                alert("Errore durante il caricamento");
+            }
+        }
+    }
+
+    httpReq.open("GET", "json/dipendenti.json");
+
+    httpReq.send();
 
 }

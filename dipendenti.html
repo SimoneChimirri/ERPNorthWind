@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
-<body>
+<body onload="caricaDipendenti()">
     <div class="wrapper">
         <div id="top">
             <img id="logo" src="resources/images/NorthWind logo.png">
@@ -34,7 +34,7 @@
                     <div id="toolbar">
                         <div>
                             <input type="text" id="searchFieldDipendenti">
-                            <input type="button" value="Cerca dipendente" class="btn" onclick="">
+                            <input type="button" value="Cerca dipendente" class="btn" onclick="ricercaDipendenti()">
                         </div>
                         <div>
                             <input type="button" value="Aggiorna dipendente" class="btn" onclick="">
@@ -55,11 +55,11 @@
                     <thead>
                         <tr>
                             <th data-index="EMPLOYEE_ID">Employee ID</th>
-                            <th data-index="FIRST_NAME">First Name</th>
-                            <th data-index="LAST_NAME">Last Name</th>
+                            <th data-index="FIRSTNAME">First Name</th>
+                            <th data-index="LASTNAME">Last Name</th>
                             <th data-index="TITLE">Title</th>
-                            <th data-index="BIRTH_DATE">Birth Date</th>
-                            <th data-index="HIRE_DATE">Hire Date</th>
+                            <th data-index="BIRTHDATE">Birth Date</th>
+                            <th data-index="HIREDATE">Hire Date</th>
                             <th data-index="ADDRESS">Address</th>
                             <th data-index="CITY">City</th>
                             <th data-index="REGION">Region</th>
@@ -71,6 +71,9 @@
                             <th data-index="NOTES">Notes</th>
                             <th data-index="MANAGER_FIRST_NAME">Manager First Name</th>
                             <th data-index="MANAGER_LAST_NAME">Manager Last Name</th>
+                            <th data-index="USERNAME">Username</th>
+                            <th data-index="PASSWORD">Password</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="dipendentiTableData">
@@ -83,11 +86,11 @@
                     <label for="EMPLOYEE_ID">Employee ID:</label>
                     <input type="text" id="employeeID" name="EMPLOYEE_ID" readonly><br>
 
-                    <label for="FIRST_NAME">First Name:</label>
-                    <input type="text" id="firstName" name="FIRST_NAME"><br>
+                    <label for="FIRSTNAME">First Name:</label>
+                    <input type="text" id="firstName" name="FIRSTNAME"><br>
 
-                    <label for="LAST_NAME">Last Name:</label>
-                    <input type="text" id="lastName" name="LAST_NAME"><br>
+                    <label for="LASTNAME">Last Name:</label>
+                    <input type="text" id="lastName" name="LASTNAME"><br>
 
                     <label for="TITLE">Title:</label>
                     <select id="title" name="TITLE">
@@ -111,12 +114,12 @@
                         <option value="7">Other</option>
                     </select><br>
 
-                    <label for="BIRTH_DATE">Birth Date:</label>
-                    <input type="date" id="birthDate" name="BIRTH_DATE"><br>
+                    <label for="BIRTHDATE">Birth Date:</label>
+                    <input type="date" id="birthDate" name="BIRTHDATE"><br>
 
-                    <label for="HIRE_DATE">Hire Date:</label>
-                    <input type="date" id="hireDate" name="HIRE_DATE"><br>
-
+                    <label for="HIREDATE">Hire Date:</label>
+                    <input type="date" id="hireDate" name="HIREDATE"><br>
+                    
                     <label for="ADDRESS">Address:</label>
                     <input type="text" id="address" name="ADDRESS"><br>
 
