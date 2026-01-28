@@ -22,7 +22,7 @@ function validateFormDipendenti(fieldDaValidare){
 
     var form = document.getElementById("formDipendenti");
 
-    function addErrorMessage(message, element){
+    function addErrorMessage(element, message){
 
         var prossimoElemento = element.nextSibling;
 
@@ -58,19 +58,256 @@ function validateFormDipendenti(fieldDaValidare){
         switch(fieldDaValidare){
             case "LASTNAME":
             case "FIRSTNAME":
+            case "BIRTHDATE":
             case "ADDRESS":
             case "CITY":
             case "COUNTRY":
-                break;
-            case "BIRTHDATE":
-            case "HIREDATE":
+                if(!fieldValue || fieldValue === ""){
+                    addErrorMessage(fieldElement, "Campo richiesto");
+                    isCampoValid = false;
+                } else{
+                    removeErrorMessage(fieldElement);
+                }
                 break;
             case "REPORTS_TO":
+                if(fieldValue || fieldValue !== ""){
+                    if(isInt(fieldValue)){
+                        removeErrorMessage(fieldElement);
+                    } else{
+                        addErrorMessage(fieldElement, "Deve essere un numero");
+                        isCampoValid = false;
+                    }
+                } else{
+                    removeErrorMessage(fieldElement);
+                }
                 break;
         }
 
         return isCampoValid;
 
     }
+
+    var isValid = true;
+
+    if(fieldDaValidare){
+        validateField(fieldDaValidare);
+    } else{
+        for(var i=0; i < formClientiFields.length; i++){
+            var isCampoValid = validateField(fieldDaValidare);
+            if(!isCampoValid){
+                isValid = false;
+            }
+        }
+    }
+
+    return isValid;
+
+}
+
+function handlerFormDipendentiSubmitButtonClick(event){
+    event.preventDefault();
+
+    if(validateFormDipendenti()){
+        var valori={}
+
+        for(var i=0; i < formDipendentiFields.length; i++){
+            var fieldIterato = formDipendentiFields[i];
+            
+            if(fieldIterato.tagName.toUpperCase() === 'SELECT'){
+                valori[fieldIterato.name] = fieldIterato.options[fieldIterato.selectedIndex].innerText;
+            } else if(fieldIterato.type === "date"){
+                var dateValue = fieldIterato.valueAsDate;
+
+                valori[fieldIterato.name] = formatDate(dateValue);
+            } else{
+                valori[fieldIterato.name] = fieldIterato.value;
+            }
+        }
+    }
+
+    function aggiungiOAggiornaDipendenteSuFile(valori, callback){
+        var httpReq = new XMLHttpRequest();
+
+        httpReq.onreadystatechange = function(){
+            if(httpReq.readyState === 4){
+                if(httpReq.status === 200){
+                    console.info("Dipendente aggiunto o aggiornato con successo");
+                    var record = JSON.parse(httpReq.responseText);
+                    callback(record);
+                } else{
+                    console.error(httpReq.responseText);
+                    alert("Errore durante l'aggiornamento o l'aggiunta del dipendente");
+                }
+            }
+        }
+
+        httpReq.open("POST", "json/dipendenti.json");
+        httpReq.setRequestHeader("Content-Type", "application/json");
+        httpReq.send(JSON.stringify(valori));
+    }
+
+    if(valori.EMPLOYEE_ID && valori.EMPLOYEE_ID !== "" && selectedRow){
+        aggiungiOAggiornaDipendenteSuFile(valori, function(dipendenteAggiornato){
+            aggiornaRigaTableDipendenti(dipendenteAggiornato);
+            document.getElementById("formDipendenti").reset();
+        })
+    } else{
+        aggiungiOAggiornaDipendenteSuFile(valori, function(dipendenteAggiunto){
+            aggiungiRigaTableDipendenti(dipendenteAggiunto);
+            document.getElementById("formDipendenti").reset();
+        })
+    }
+}
+
+var formDipendentiFields = document.getElementById("formDipendenti").querySelectorAll('input:not(.btn), select');
+
+var submitButton = document.getElementById("formDipendenti").querySelectorAll('input[type="submit"]')[0];
+
+submitButton.addEventListener("click", handlerFormDipendentiSubmitButtonClick);
+
+document.getElementById("tableDipendenti").tBodies[0].addEventListener("click", handlerTableDipendentiRowClick);
+
+function handlerFormDipendentiChange(event){
+    validateFormDipendenti(this.name);
+}
+
+for(var indiceFormFields =0; indiceFormFields < formDipendentiFields.length; indiceFormFields++){
+    formDipendentiFields[indiceFormFields].addEventListener("input", handlerFormDipendentiChange);
+    formDipendentiFields[indiceFormFields].addEventListener("blur", handlerFormDipendentiChange);
+}
+
+function aggiungiRigaTableDipendenti(valori){
+
+    var tr = document.createElement("tr");
+
+    var tableDipendenti = document.getElementById("tableDipendenti");
+
+    var headerFieldList = tableDipendenti.tHead.getElementsByTagName("th");
+
+    for(var i=0; i < headerFieldList.length; i++){
+        var fieldName = headerFieldList[i].getAttribute("data-index");
+        var td = document.createElement("td");
+
+        if(fieldName){
+            if(valori[fieldName]){
+                td.innerHTML = valori[fieldName];
+            } else{
+                var iEl = document.createElement("i");
+                iEl.classList.add("fa");
+                iEl.classList.add("fa-trash");
+                iEl.style["font-size"] = "16px";
+                iEl.addEventListener("click",handlerTableDipendentiDeleteButtonClick);
+                td.appendChild(iEl);
+            }
+        }
+
+        tr.appendChild(td);
+    }
+
+    tableDipendenti.tBodies[0].insertBefore(tr, tableDipendenti.tBodies[0].firstElementChild);
+
+}
+
+function aggiornaRigaTableDipendenti(valori){
+
+    var tr = selectedRow;
+    var tDataList = tr.querySelectorAll("td");
+    var tableDipendenti = document.getElementById("tableDipendenti");
+    var headerFieldList = tableDipendenti.tHead.getElementsByTagName("th");
+
+    for(var i=0; i < headerFieldList.length; i++){
+        var fieldName = headerFieldList[i].getAttribute("data-index");
+
+        if(fieldName && fieldName!==""){
+            if(valori[fieldName]){
+                tDataList[i].innerHTML = valori[fieldName];
+            } else{
+                tDataList[i].innerHTML = "";
+            }
+        }
+    }
+}
+
+function handlerTableDipendentiRowClick(event){
+    event.stopPropagation();
+
+    var target = event.target;
+    var tr;
+
+    if(target.querySelectorAll("i").length > 0){
+        return;
+    }
+
+    var tBody = document.getElementById("tableDipendnti").tBodies[0];
+
+    var previousSelectedElement = tBody.querySelectorAll("tr.selected");
+
+    if(target.tagName.toUpperCase() === "TD"){
+        tr = target.parentNode;
+    } else{
+        tr = target;
+    }
+
+    tr.classList.add("selected");
+    selectedRow = tr;
+
+    var tDataList = tr.querySelectorAll("td");
+    var headerFieldList = tableDipendenti.tHead.getElementsByTagName("th");
+    var form = document.getElementById("formDipendenti");
+
+    for(var i=0; i < headerFieldList.length; i++){
+        var fieldName = headerFieldList[i].getAttribute("data-index");
+        if(fieldName && fieldName!==""){
+            var valore = tDataList[i].innerText;
+            var formField = form[fieldName];
+
+            if(fieldName === "BIRTHDATE" || fieldName === "HIREDATE"){
+                if(valore !== ""){
+                    var splittedStringDate = valore.split("-");
+
+                    valore = "19" + splittedStringDate[2] + splittedStringDate[1] + splittedStringDate[0];
+                }
+            } else if(fieldName === "TITLE" || fieldName == "TITLE_OF_COURTESY"){
+                if(valore && valore != null){
+                    var selectOptions = formField.options;
+                    for(var j=0; j < selectOptions.length; j++){
+                        if(selectOptions[j].innerText === valore){
+                            valore = selectOptions[j].value;
+                            break;
+                        }
+                    }
+                }
+            } else if(fieldName === "MANAGER_FIRSTNAME" || fieldName === "MANAGER_LASTNAME"){
+                if(valore && valore != null){
+                    var managerId = null;
+                    var dipendentiData = JSON.parse(localStorage.getItem("dipendenti")) || [];
+                    for(var k=0; k < dipendentiData.length; k++){
+                        if((dipendentiData[k].FIRSTNAME === tDataList[i].innerText && dipendentiData[k].LASTNAME === tDataList[i].innerText)){
+                            managerId = dipendentiData[k].EMPLOYEE_ID;
+                            break;
+                        }
+                    }
+                    valore = managerId;
+                }
+                fieldName = "MANAGER_ID";
+            }
+
+            form[fieldName].value = valore;
+        }
+    }
+
+}
+
+function handlerTableDipendentiDeleteButtonClick(event){
+    event.stopPropagation();
+
+
+}
+
+function ricercaDipendenti(){
+
+}
+
+function caricaDipendenti(){
 
 }
