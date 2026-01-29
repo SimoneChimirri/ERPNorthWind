@@ -1,4 +1,31 @@
 var selectedRow;
+const STORAGE_KEY = "dipendenti";
+
+function getDipendenti(){
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+}
+
+function setDipendenti(lista){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(lista));
+}
+
+function risolviManager(managerId){
+    if(!managerId) return { first: "", last: "" };
+
+    var dipendenti = getDipendenti();
+
+    for(var i=0; i < dipendenti.length; i++){
+        if(dipendenti[i].EMPLOYEE_ID === managerId){
+            return {
+                first: dipendenti[i].FIRSTNAME,
+                last: dipendenti[i].LASTNAME
+            };
+        }
+    }
+    return { first: "", last: "" };
+}
+
+
 
 function formatDate(d){
     function pad(s){ return (s < 10) ? '0' + s : s;}
@@ -184,6 +211,8 @@ function aggiungiRigaTableDipendenti(valori){
 
     var headerFieldList = tableDipendenti.tHead.getElementsByTagName("th");
 
+    var dipendentiData = getDipendenti();
+
     for(var i=0; i < headerFieldList.length; i++){
         var fieldName = headerFieldList[i].getAttribute("data-index");
         var td = document.createElement("td");
@@ -191,12 +220,15 @@ function aggiungiRigaTableDipendenti(valori){
         if(fieldName){
             if(valori[fieldName]){
                 if(fieldName === "MANAGER_FIRSTNAME" || fieldName === "MANAGER_LASTNAME"){
-                    var dipendentiData = JSON.parse(localStorage.getItem("dipendenti")) || [];
                     var managerId1 = valori["MANAGER_FIRSTNAME"];
                     var managerId2 = valori["MANAGER_LASTNAME"];
                     for(var k=0; k < dipendentiData.length; k++){
                         if(dipendentiData[k].LASTNAME == managerId2 || dipendentiData[k].FIRSTNAME == managerId1){
-                            td.innerHTML = dipendentiData[k].EMPLOYEE_ID;
+                            if(fieldName === "MANAGER_FIRSTNAME"){
+                                td.innerHTML = dipendentiData[k].FIRSTNAME;
+                            } else{
+                                td.innerHTML = dipendentiData[k].LASTNAME;
+                            }
                             break;
                         }
                     }
@@ -233,7 +265,16 @@ function aggiornaRigaTableDipendenti(valori){
 
         if(fieldName && fieldName!==""){
             if(valori[fieldName]){
-                tDataList[i].innerHTML = valori[fieldName];
+                if(fieldName === "MANAGER_FIRSTNAME" || fieldName === "MANAGER_LASTNAME"){
+                    var managerNames = risolviManager(valori["MANAGER_ID"]);
+                    if(fieldName === "MANAGER_FIRSTNAME"){
+                        tDataList[i].innerHTML = managerNames.first;
+                    } else{
+                        tDataList[i].innerHTML = managerNames.last;
+                    }
+                } else{
+                    tDataList[i].innerHTML = valori[fieldName];
+                }
             } else{
                 tDataList[i].innerHTML = "";
             }
@@ -297,7 +338,7 @@ function handlerTableDipendentiRowClick(event){
             } else if(fieldName === "MANAGER_FIRSTNAME" || fieldName === "MANAGER_LASTNAME"){
                 if(valore && valore != null){
                     var managerId = "";
-                    var dipendentiData = JSON.parse(localStorage.getItem("dipendenti")) || [];
+                    var dipendentiData = getDipendenti();
                     for(var k=0; k < dipendentiData.length; k++){
                         if((dipendentiData[k].FIRSTNAME === tDataList[i].innerText || dipendentiData[k].LASTNAME === tDataList[i].innerText)){
                             managerId = dipendentiData[k].EMPLOYEE_ID;
@@ -340,16 +381,16 @@ function handlerTableDipendentiDeleteButtonClick(event){
         }
     }
 
-    httpReq.open("DELETE", "json/dipendenti.json?EMPLOYEE_ID?="+EmployeeId);
+    httpReq.open("DELETE", "json/dipendenti.json?EMPLOYEE_ID="+EmployeeId);
     httpReq.send();
 
 }
 
 function ricercaDipendenti(){
 
-    var valoreDaRicercare = document.getElementById("searchFieldGiocatori").value;
+    var valoreDaRicercare = document.getElementById("searchFieldDipendenti").value.toLowerCase();
 
-    var rows = document.getElementById("tableGiocatori").tBodies[0].querySelectorAll("tr");
+    var rows = document.getElementById("tableDipendenti").tBodies[0].querySelectorAll("tr");
 
     for(var i=0; i < rows.length; i++){
         if(!valoreDaRicercare || valoreDaRicercare === ""){
@@ -371,7 +412,7 @@ function caricaDipendenti(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaDipendenti = JSON.parse(httpReq.responseText);                
-                localStorage.setItem("dipendenti", JSON.stringify(listaDipendenti));        
+                setDipendenti(listaDipendenti);       
                 for(var i=listaDipendenti.length; i > 0; i--){
                     aggiungiRigaTableDipendenti(listaDipendenti[i-1]);
                 }

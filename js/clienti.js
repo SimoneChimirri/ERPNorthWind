@@ -282,7 +282,7 @@ function handlerTableClientiDeleteButtonClick(event){
 document.getElementById("tableClienti").tBodies[0].getElementsByTagName("i")[0];
 
 function ricercaClienti(){
-    var valoreDaRicercare = document.getElementById("searchFieldClienti").value;
+    var valoreDaRicercare = document.getElementById("searchFieldClienti").value.toLowerCase();
 
     var rows = document.getElementById("tableClienti").tBodies[0].querySelectorAll("tr");
 
