@@ -77,6 +77,11 @@ body{
     top: 0;
     right: 0px;
     position: absolute;
+    transition: all 0.3s ease;
+}
+
+#sidebar.collapsed {
+    display: none;
 }
 
 input[type=text], input[type=date], input[type=number], select, textarea{

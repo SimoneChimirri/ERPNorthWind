@@ -184,6 +184,9 @@ function handlerFormDipendentiSubmitButtonClick(event){
             document.getElementById("formDipendenti").reset();
         })
     }
+
+    var sidebar = document.getElementById("sidebar");
+    sidebar.classList.add("collapsed");
 }
 
 var formDipendentiFields = document.getElementById("formDipendenti").querySelectorAll('input:not(.btn), select');
@@ -287,6 +290,9 @@ function handlerTableDipendentiRowClick(event){
 
     var target = event.target;
     var tr;
+
+    var sidebar = document.getElementById("sidebar");
+    sidebar.classList.remove("collapsed");
 
     if(target.querySelectorAll("i").length > 0){
         return;

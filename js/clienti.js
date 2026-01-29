@@ -135,6 +135,9 @@ function handlerFormClientiSubmitButtonClick(event){
                 document.getElementById("formClienti").reset();
             })
         }
+
+        var sidebar = document.getElementById("sidebar");
+        sidebar.classList.add("collapsed");
     } else{
 
     }
@@ -208,6 +211,9 @@ function aggiornaRigaTableClienti(valori){
 function handlerTableClientiRowClick(event){
     event.stopPropagation();
     var target = event.target;
+
+    var sidebar = document.getElementById("sidebar");
+    sidebar.classList.remove("collapsed");
 
     if(target.querySelectorAll("i").length > 0){
         return;

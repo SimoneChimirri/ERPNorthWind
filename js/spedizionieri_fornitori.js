@@ -121,6 +121,9 @@ function handlerFormSpedizionieriSubmitButtonClick(event){
                 document.getElementById("formSpedizionieri").reset();
             })
         }
+
+        var sidebar = document.getElementById("sidebar");
+        sidebar.classList.add("collapsed");
     } else{
 
     }
@@ -194,6 +197,9 @@ function aggiornaRigaTableSpedizionieri(valori){
 function handlerTableSpedizionieriRowClick(event){
     event.stopPropagation();
     var target = event.target;
+
+    var sidebar = document.getElementById("sidebar");
+    sidebar.classList.remove("collapsed");
 
     if(target.querySelectorAll("i").length > 0){
         return;
@@ -505,6 +511,9 @@ function aggiornaRigaTableFornitori(valori){
 function handlerTableFornitoriRowClick(event){
     event.stopPropagation();
     var target = event.target;
+
+    var sidebar = document.getElementById("sidebar");
+    sidebar.classList.remove("collapsed");
 
     if(target.querySelectorAll("i").length > 0){
         return;

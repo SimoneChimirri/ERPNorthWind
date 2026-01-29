@@ -216,6 +216,9 @@ function handlerFormOrdiniSubmitButtonClick(event){
                 document.getElementById("formOrdini").reset();
             })
         }
+
+        var sidebar = document.getElementById("sidebar");
+        sidebar.classList.add("collapsed");
     } else{
 
     }
@@ -315,6 +318,9 @@ function aggiornaRigaTableOrdini(valori){
 function handlerTableOrdiniRowClick(event){
     event.stopPropagation();
     var target = event.target;
+
+    var sidebar = document.getElementById("sidebar");
+    sidebar.classList.remove("collapsed");
 
     if(target.querySelectorAll("i").length > 0){
         return;

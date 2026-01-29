@@ -147,6 +147,9 @@ function handlerFormProdottiSubmitButtonClick(event){
                 document.getElementById("formProdotti").reset();
             })
         }
+
+        var sidebar = document.getElementById("sidebar");
+        sidebar.classList.add("collapsed");
     } else{
 
     }
@@ -218,6 +221,9 @@ function aggiornaRigaTableProdotti(valori){
 function handlerTableProdottiRowClick(event){
     event.stopPropagation();
     var target = event.target;
+
+    var sidebar = document.getElementById("sidebar");
+    sidebar.classList.remove("collapsed");
 
     if(target.querySelectorAll("i").length > 0){
         return;
@@ -515,6 +521,9 @@ function aggiornaRigaTableCategorie(valori){
 function handlerTableCategorieRowClick(event){
     event.stopPropagation();
     var target = event.target;
+
+    var sidebar = document.getElementById("sidebar");
+    sidebar.classList.remove("collapsed");
 
     if(target.querySelectorAll("i").length > 0){
         return;
