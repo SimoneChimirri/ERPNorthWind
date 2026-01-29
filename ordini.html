@@ -10,8 +10,8 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
-<body>
-    <div class="wrapper">
+<body onload="caricaOrdini()">
+    <div class="wrapper" id="master">
         <div id="top">
             <img id="logo" src="resources/images/NorthWind logo.png">
             <h1>NorthWind</h1>
@@ -34,7 +34,7 @@
                     <div id="toolbar">
                         <div>
                             <input type="text" id="searchFieldOrdini">
-                            <input type="button" value="Cerca ordine" class="btn" onclick="">
+                            <input type="button" value="Cerca ordine" class="btn" onclick="ricercaOrdini()">
                         </div>
                         <div>
                             <input type="button" value="Aggiorna ordine" class="btn" onclick="">
@@ -56,12 +56,12 @@
                         <tr>
                             <th data-index="ORDER_ID">Order ID</th>
                             <th data-index="CUSTOMER">Customer</th>
-                            <th data-index="EMPLOYEE_FIRST_NAME">Employee First Name</th>
-                            <th data-index="EMPLOYEE_LAST_NAME">Employee Last Name</th>
+                            <th data-index="EMPLOYEE_FIRSTNAME">Employee First Name</th>
+                            <th data-index="EMPLOYEE_LASTNAME">Employee Last Name</th>
                             <th data-index="ORDER_DATE">Order Date</th>
                             <th data-index="REQUIRED_DATE">Required Date</th>
                             <th data-index="SHIPPED_DATE">Shipped Date</th>
-                            <th data-index="SHIPPER">Shipper</th>
+                            <th data-index="SHIPPER_NAME">Shipper</th>
                             <th data-index="FREIGHT">Freight</th>
                             <th data-index="SHIP_NAME">Ship Name</th>
                             <th data-index="SHIP_ADDRESS">Ship Address</th>
@@ -69,6 +69,7 @@
                             <th data-index="SHIP_REGION">Ship Region</th>
                             <th data-index="SHIP_POSTAL_CODE">Ship Postal Code</th>
                             <th data-index="SHIP_COUNTRY">Ship Country</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="tableOrdiniData">
@@ -76,9 +77,59 @@
                 </table>
             </div>
         </div>
+    </div>
+    <div class="wrapper" id="detail">
+        <div id="form-container">
+            <h3>Form Ordini:</h3>
+            <form action="" method="POST" id="formOrdini">
+                <label>Order ID:</label>
+                <input type="text" name="ORDER_ID" id="ORDER_ID">
+                
+                <label>Customer:</label>
+                <input type="text" name="CUSTOMER" id="CUSTOMER">
+                
+                <label>Employee ID:</label>
+                <input type="number" name="EMPLOYEE_ID" id="EMPLOYEE_ID">
+                
+                <label>Order Date:</label>
+                <input type="text" name="ORDER_DATE" id="ORDER_DATE">
+                
+                <label>Required Date:</label>
+                <input type="text" name="REQUIRED_DATE" id="REQUIRED_DATE">
+                
+                <label>Shipped Date:</label>
+                <input type="text" name="SHIPPED_DATE" id="SHIPPED_DATE">
+                
+                <label>Shipper:</label>
+                <input type="text" name="SHIPPER_NAME" id="SHIPPER_NAME">
+                
+                <label>Freight:</label>
+                <input type="text" name="FREIGHT" id="FREIGHT">
+                
+                <label>Ship Name:</label>
+                <input type="text" name="SHIP_NAME" id="SHIP_NAME">
+                
+                <label>Ship Address:</label>
+                <input type="text" name="SHIP_ADDRESS" id="SHIP_ADDRESS">
+                
+                <label>Ship City:</label>
+                <input type="text" name="SHIP_CITY" id="SHIP_CITY">
+                
+                <label>Ship Region:</label>
+                <input type="text" name="SHIP_REGION" id="SHIP_REGION">
+                
+                <label>Ship Postal Code:</label>
+                <input type="text" name="SHIP_POSTAL_CODE" id="SHIP_POSTAL_CODE">
+                
+                <label>Ship Country:</label>
+                <input type="text" name="SHIP_COUNTRY" id="SHIP_COUNTRY">
+
+                <input type="submit" value="Salva" class="btn">
+                <input type="reset" value="Cancella" class="btn">
+            </form>
+        </div>
         <div id="bottom">NorthWind</div>
     </div>
-
     <script type="text/javascript" src="js/ordini.js"></script>
 </body>
 </html>
