@@ -62,7 +62,7 @@ body{
     padding: 6px;
     border: 1px solid #9b9b9b;
     text-align: left;
-    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 #main tr:nth-child(odd){

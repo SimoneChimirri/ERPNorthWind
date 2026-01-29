@@ -195,7 +195,7 @@ var submitButton = document.getElementById("formDipendenti").querySelectorAll('i
 
 submitButton.addEventListener("click", handlerFormDipendentiSubmitButtonClick);
 
-document.getElementById("tableDipendenti").tBodies[0].addEventListener("click", handlerTableDipendentiRowClick);
+document.getElementById("tableDipendenti").tBodies[0].addEventListener("dblclick", handlerTableDipendentiRowClick);
 
 function handlerFormDipendentiChange(event){
     validateFormDipendenti(this.name);
@@ -419,7 +419,7 @@ function caricaDipendenti(){
             if(httpReq.status === 200){
                 var listaDipendenti = JSON.parse(httpReq.responseText);                
                 setDipendenti(listaDipendenti);       
-                for(var i=listaDipendenti.length; i > 0; i--){
+                for(var i=listaDipendenti.length, counter = 0; i > 0 && counter < 50; i--, counter++){
                     aggiungiRigaTableDipendenti(listaDipendenti[i-1]);
                 }
                 console.info("Caricamento avvenuto con successo");

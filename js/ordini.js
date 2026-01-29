@@ -319,8 +319,8 @@ function handlerTableOrdiniRowClick(event){
     event.stopPropagation();
     var target = event.target;
 
-    var sidebar = document.getElementById("sidebar");
-    sidebar.classList.remove("collapsed");
+    //var sidebar = document.getElementById("sidebar");
+    //sidebar.classList.remove("collapsed");
 
     if(target.querySelectorAll("i").length > 0){
         return;
@@ -377,7 +377,7 @@ function handlerTableOrdiniRowClick(event){
     }
 }
 
-document.getElementById("tableOrdini").tBodies[0].addEventListener("click", handlerTableOrdiniRowClick);
+document.getElementById("tableOrdini").tBodies[0].addEventListener("dblclick", handlerTableOrdiniRowClick);
 
 function handlerTableOrdiniDeleteButtonClick(event){
     event.stopPropagation();

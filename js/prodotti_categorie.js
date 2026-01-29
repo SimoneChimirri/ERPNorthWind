@@ -271,7 +271,7 @@ function handlerTableProdottiRowClick(event){
 
 }
 
-document.getElementById("tableProdotti").tBodies[0].addEventListener("click", handlerTableProdottiRowClick);
+document.getElementById("tableProdotti").tBodies[0].addEventListener("dblclick", handlerTableProdottiRowClick);
 
 function handlerTableProdottiDeleteButtonClick(event){
     event.stopPropagation();
@@ -326,7 +326,7 @@ function caricaProdotti(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaProdotti = JSON.parse(httpReq.responseText);
-                for(var i=listaProdotti.length; i > 0; i--){
+                for(var i=listaProdotti.length, counter = 0; i > 0 && counter < 50; i--, counter++){
                     aggiungiRigaTableProdotti(listaProdotti[i-1]);
                 }
                 console.info("Caricamento dei prodotti avvenuto con successo");
@@ -564,7 +564,7 @@ function handlerTableCategorieRowClick(event){
 
 }
 
-document.getElementById("tableCategorie").tBodies[0].addEventListener("click", handlerTableCategorieRowClick);
+document.getElementById("tableCategorie").tBodies[0].addEventListener("dblclick", handlerTableCategorieRowClick);
 
 function handlerTableCategorieDeleteButtonClick(event){
     event.stopPropagation();
@@ -619,7 +619,7 @@ function caricaCategorie(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaCategorie = JSON.parse(httpReq.responseText);
-                for(var i=listaCategorie.length; i > 0; i--){
+                for(var i=listaCategorie.length, counter = 0; i > 0 && counter < 50; i--, counter++){
                     aggiungiRigaTableCategorie(listaCategorie[i-1]);
                 }
                 console.info("Caricamento delle categorie avvenuto con successo");

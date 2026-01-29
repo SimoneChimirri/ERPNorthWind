@@ -240,7 +240,7 @@ function handlerTableSpedizionieriRowClick(event){
 
 }
 
-document.getElementById("tableSpedizionieri").tBodies[0].addEventListener("click", handlerTableSpedizionieriRowClick);
+document.getElementById("tableSpedizionieri").tBodies[0].addEventListener("dblclick", handlerTableSpedizionieriRowClick);
 
 function handlerTableSpedizionieriDeleteButtonClick(event){
     event.stopPropagation();
@@ -295,7 +295,7 @@ function caricaSpedizionieri(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaSpedizionieri = JSON.parse(httpReq.responseText);
-                for(var i=listaSpedizionieri.length; i > 0; i--){
+                for(var i=listaSpedizionieri.length, counter = 0; i > 0 && counter < 50; i--, counter++){
                     aggiungiRigaTableSpedizionieri(listaSpedizionieri[i-1]);
                 }
                 console.info("Caricamento degli spedizionieri avvenuto con successo");
@@ -565,7 +565,7 @@ function handlerTableFornitoriRowClick(event){
 
 }
 
-document.getElementById("tableFornitori").tBodies[0].addEventListener("click", handlerTableFornitoriRowClick);
+document.getElementById("tableFornitori").tBodies[0].addEventListener("dblclick", handlerTableFornitoriRowClick);
 
 function handlerTableFornitoriDeleteButtonClick(event){
     event.stopPropagation();
@@ -620,7 +620,7 @@ function caricaFornitori(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaFornitori = JSON.parse(httpReq.responseText);
-                for(var i=listaFornitori.length; i > 0; i--){
+                for(var i=listaFornitori.length, counter = 0; i > 0 && counter < 50; i--, counter++){
                     aggiungiRigaTableFornitori(listaFornitori[i-1]);
                 }
                 console.info("Caricamento dei fornitori avvenuto con successo");

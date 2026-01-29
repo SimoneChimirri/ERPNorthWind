@@ -265,7 +265,7 @@ function handlerTableClientiRowClick(event){
 
 }
 
-document.getElementById("tableClienti").tBodies[0].addEventListener("click", handlerTableClientiRowClick);
+document.getElementById("tableClienti").tBodies[0].addEventListener("dblclick", handlerTableClientiRowClick);
 
 function handlerTableClientiDeleteButtonClick(event){
     event.stopPropagation();
@@ -320,7 +320,7 @@ function caricaClienti(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaClienti = JSON.parse(httpReq.responseText);
-                for(var i=listaClienti.length; i > 0; i--){
+                for(var i=listaClienti.length, counter = 0; i > 0 && counter <50; i--, counter++){
                     aggiungiRigaTableClienti(listaClienti[i-1]);
                 }
                 console.info("Caricamento dei clienti avvenuto con successo");
