@@ -123,6 +123,29 @@ input.btn{
     padding: 0;
 }
 
+#menubar {
+    transition: all 0.3s ease;
+}
+
+#menulist.collapsed {
+    max-width: 50px;
+    overflow: hidden;
+}
+
+#menulist.collapsed ul {
+    width: 250px;
+}
+
+#menulist.collapsed{
+    display: none;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #f0f0f0;
+    border: none;
+    width: 100%;
+    text-align: left;
+}
+
 .menuitem{
     background-color: #f1f1f1;
     border: 1px solid #909090;

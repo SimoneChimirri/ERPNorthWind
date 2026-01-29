@@ -9,6 +9,17 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <script>
+        function toggleMenubar() {
+            var menulist = document.getElementById("menulist");
+            if(menulist.classList.contains("collapsed")){
+                menulist.classList.remove("collapsed");
+                return;
+            } else{
+                menulist.classList.add("collapsed");
+            }
+        }
+    </script>
 </head>
 <body onload="caricaDipendenti()">
     <div class="wrapper">
@@ -19,6 +30,7 @@
         </div>
         <div class="wrapper">
             <div id="menubar">
+                <button id="toggleMenuButton" onclick="toggleMenubar()"><i class="fa fa-bars"></i></button>
                 <ul id="menulist">
                     <li class="menuitem"><a href="index.html"><i class="fa fa-house"></i>Riepilogo</a></li>
                     <li class="menuitem"><a href="ordini.html"><i class="fa fa-list"></i>Ordini</a></li>
