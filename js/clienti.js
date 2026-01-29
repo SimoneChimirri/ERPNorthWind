@@ -44,7 +44,6 @@ function validateFormClienti(fieldDaValidare){
             case "ADDRESS":
             case "CITY":
             case "COUNTRY":
-            case "PHONE":
                 if(!fieldValue || fieldValue === ""){
                     addErrorMessage(fieldElement, "Campo richiesto");
                     isCampoValid = false;
@@ -52,6 +51,16 @@ function validateFormClienti(fieldDaValidare){
                     removeErrorMessage(fieldElement);
                 }
                 break;
+            case "PHONE":
+                if(!fieldValue || fieldValue === ""){
+                    addErrorMessage(fieldElement, "Campo richiesto");
+                    isCampoValid = false;
+                } else if(!/^[0-9+\-\s()]+$/.test(fieldValue)){
+                    addErrorMessage(fieldElement, "Formato numero di telefono non valido");
+                    isCampoValid = false;
+                } else{
+                    removeErrorMessage(fieldElement);
+                }
         }
 
         return isCampoValid;
@@ -111,8 +120,8 @@ function handlerFormClientiSubmitButtonClick(event){
             }
 
             httpReq.open("POST","json/clienti.json");
-            httpReq.setRequestHeader("Cntent-Type","application/json");
-            httpReq.send();
+            httpReq.setRequestHeader("Content-Type","application/json");
+            httpReq.send(JSON.stringify(valori));
         }
 
         if(valori.CUSTOMER_ID && valori.CUSTOMER_ID !== "" && selectedRow){

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
 </head>
-<body>
+<body onload="caricaSpedizionieri(); caricaFornitori()">
     <div class="wrapper">
         <div id="top">
             <img id="logo" src="resources/images/NorthWind logo.png">
@@ -34,7 +34,7 @@
                     <div id="toolbar">
                         <div>
                             <input type="text" id="searchFieldSpedizionieri">
-                            <input type="button" value="Cerca spedizioniere" class="btn" onclick="">
+                            <input type="button" value="Cerca spedizioniere" class="btn" onclick="ricercaSpedizionieri()">
                         </div>
                         <div>
                             <input type="button" value="Aggiorna spedizioniere" class="btn" onclick="">
@@ -53,7 +53,7 @@
                     <div id="toolbar">
                         <div>
                             <input type="text" id="searchFieldFornitori">
-                            <input type="button" value="Cerca fornitore" class="btn" onclick="">
+                            <input type="button" value="Cerca fornitore" class="btn" onclick="ricercaFornitori()">
                         </div>
                         <div>
                             <input type="button" value="Aggiorna fornitore" class="btn" onclick="">
@@ -73,14 +73,16 @@
                 <table id="tableSpedizionieri">
                     <thead>
                         <tr>
-                            <th>Shipper ID</th>
-                            <th>Company Name</th>
-                            <th>Phone</th>
+                            <th data-index="SHIPPER_ID">Shipper ID</th>
+                            <th data-index="COMPANY_NAME">Company Name</th>
+                            <th data-index="PHONE">Phone</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="tableSpedizionieriData">
                     </tbody>
                 </table>
+                <br><br>
                 <table id="tableFornitori">
                     <thead>
                         <tr>
@@ -95,6 +97,7 @@
                             <th data-index="COUNTRY">Country</th>
                             <th data-index="PHONE">Phone</th>
                             <th data-index="FAX">Fax</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody id="tableFornitoriData">
@@ -112,7 +115,11 @@
 
                     <label for="PHONE">Phone:</label>
                     <input type="text" id="shipperPhone" name="PHONE"><br>
+
+                    <input type="submit" value="Salva" class="btn">
+                    <input type="reset" value="Cancella" class="btn">
                 </form>
+                <br><br>
                 <h3>Form Fornitori:</h3>
                 <form action="" method="POST" id="formFornitori">
                     <label for="SUPPLIER_ID">Supplier ID:</label>
@@ -125,7 +132,18 @@
                     <input type="text" id="contactName" name="CONTACT_NAME"><br>
 
                     <label for="CONTACT_TITLE">Contact Title:</label>
-                    <input type="text" id="contactTitle" name="CONTACT_TITLE"><br>
+                    <select name="CONTACT_TITLE">
+                        <option value="1">Sales Manager</option>
+                        <option value="2">Marketing Manager</option>
+                        <option value="3">Purchasing Manager</option>
+                        <option value="4">Owner</option>
+                        <option value="5">Sales Representative</option>
+                        <option value="6">Wholesale Account Agent</option>
+                        <option value="7">Order Administrator</option>
+                        <option value="8">Accounting Manager</option>
+                        <option value="9">Regional Sales Rep.</option>
+                        <option value="10">Other</option>
+                    </select><br>
 
                     <label for="ADDRESS">Address:</label>
                     <input type="text" id="address" name="ADDRESS"><br>

@@ -119,7 +119,7 @@ function validateFormDipendenti(fieldDaValidare){
     if(fieldDaValidare){
         validateField(fieldDaValidare);
     } else{
-        for(var i=0; i < formClientiFields.length; i++){
+        for(var i=0; i < formDipendentiFields.length; i++){
             var isCampoValid = validateField(fieldDaValidare);
             if(!isCampoValid){
                 isValid = false;
