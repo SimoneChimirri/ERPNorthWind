@@ -80,6 +80,11 @@ body{
     transition: all 0.3s ease;
 }
 
+#sidebar.order-details{
+    float: right;
+    right: 0;
+}
+
 #sidebar.collapsed {
     display: none;
 }

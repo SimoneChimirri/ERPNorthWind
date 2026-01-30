@@ -21,7 +21,7 @@
         }
     </script>
 </head>
-<body onload="caricaOrdini()">
+<body onload="caricaOrdini();">
     <div class="wrapper" id="master">
         <div id="top">
             <img id="logo" src="resources/images/NorthWind logo.png">
@@ -144,6 +144,46 @@
                 <input type="submit" value="Salva" class="btn">
                 <input type="reset" value="Cancella" class="btn">
             </form>
+        </div>
+        <div id="main" class="wrapper">
+            <div id="mainHeader">
+                <h1>Dettaglio ordine</h1>
+            </div>
+            <table id="tableDettaglioOrdine">
+                <thead>
+                    <tr>
+                        <th data-index="PRODUCT_ID">Product ID</th>
+                        <th data-index="PRODUCT_NAME">Product Name</th>
+                        <th data-index="QUANTITY">Quantity</th>
+                        <th data-index="UNIT_PRICE">Unit Price</th>
+                        <th data-index="DISCOUNT">Discount</th>
+                    </tr>
+                </thead>
+                <tbody id="tableDettaglioOrdineData">
+                </tbody>
+            </table>
+            <div id="sidebar" class="collapsed; order-details">
+                <h3>Form Dettaglio Ordine</h3>
+                <form action="" method="POST" id="formDettaglioOrdine">
+                    <label for="ORDER_ID">Order ID:</label>
+                    <input type="text" name="ORDER_ID" id="ORDER_ID" readonly/>
+
+                    <label for="PRODUCT_ID">Product ID:</label>
+                    <input type="text" name="PRODUCT_ID" id="PRODUCT_ID">
+                    
+                    <label for="QUANTITY">Quantity:</label>
+                    <input type="number" name="QUANTITY" id="QUANTITY">
+                    
+                    <label for="UNIT_PRICE">Unit Price:</label>
+                    <input type="text" name="UNIT_PRICE" id="UNIT_PRICE">
+                    
+                    <label for="DISCOUNT">Discount:</label>
+                    <input type="text" name="DISCOUNT" id="DISCOUNT">
+
+                    <input type="submit" value="Salva" class="btn">
+                    <input type="reset" value="Cancella" class="btn">
+                </form>
+            </div>
         </div>
         <div id="bottom">NorthWind</div>
     </div>
