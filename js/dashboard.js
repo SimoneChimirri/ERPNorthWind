@@ -240,3 +240,87 @@ function contaOrdiniTotali(){
     httpReq.open("GET","json/ordini.json");
     httpReq.send();
 }
+
+function contaOrdiniUltimoMese(){
+
+    var httpReq = new XMLHttpRequest();
+
+    httpReq.onreadystatechange = function(){
+        if(httpReq.readyState === 4){
+            if(httpReq.status === 200){
+                var listaOrdini = JSON.parse(httpReq.responseText);
+                var ordiniUltimoMese = [];
+                for(var i=listaOrdini.length; i > 0; i--){
+                    if(listaOrdini[i-1].ORDER_DATE - new Date(new Date().setMonth(new Date().getMonth() - 1)) >= 0){
+                        ordiniUltimoMese.appendChild(listaOrdini[i-1]);
+                    }
+                }
+                document.getElementById("lastMonthOrdersData").innerHTML = ordiniUltimoMese.length;
+                console.info("Conteggio degli ordini avvenuto con successo")
+            } else{
+                console.error(httpReq.responseText);
+                alert("Errore durante il conteggio degli ordini");
+            }
+        }
+    }
+
+    httpReq.open("GET","json/ordini.json");
+    httpReq.send();
+}
+
+function contaRicaviTotali(){
+
+    var httpReq = new XMLHttpRequest();
+
+    httpReq.onreadystatechange = function(){
+        if(httpReq.readyState === 4){
+            if(httpReq.status === 200){
+                var listaDettagliOrdini = JSON.parse(httpReq.responseText);
+                var ricaviTotali = 0;
+                for(var i=listaDettagliOrdini.length; i > 0; i--){
+                    if(listaDettagliOrdini[i-1].UNIT_PRICE && listaDettagliOrdini[i-1].QUANTITY){
+                        ricaviTotali += listaDettagliOrdini[i-1].UNIT_PRICE * listaDettagliOrdini[i-1].QUANTITY;
+                    }
+                }
+                document.getElementById("totalRevenueData").innerHTML = "€ " + ricaviTotali;
+                console.info("Ricavi calcolati con successo");
+            } else{
+                console.error(httpReq.responseText);
+                alert("Errore durante il conteggio dei ricavi");
+            }
+        }
+    }
+
+    httpReq.open("GET","json/dettagli_ordini.json");
+    httpReq.send();
+
+}
+
+function contaRicaviUltimoMese(){
+
+    var httpReq = new XMLHttpRequest();
+
+    httpReq.onreadystatechange = function(){
+        if(httpReq.readyState === 4){
+            if(httpReq.status === 200){
+                var listaDettagliOrdini = JSON.parse(httpReq.responseText);
+                var ricaviTotali = 0;
+                for(var i=listaDettagliOrdini.length; i > 0; i--){
+                    if(listaDettagliOrdini[i-1].UNIT_PRICE && listaDettagliOrdini[i-1].QUANTITY){
+                        if(new Date(listaDettagliOrdini[i-1].ORDER_DATE) - new Date(new Date().setMonth(new Date().getMonth() - 1)) >= 0){
+                            ricaviTotali += listaDettagliOrdini[i-1].UNIT_PRICE * listaDettagliOrdini[i-1].QUANTITY;
+                        }
+                    }
+                }
+                document.getElementById("lastMonthRevenueData").innerHTML = "€ " + ricaviTotali;
+                console.info("Ricavi calcolati con successo");
+            } else{
+                console.error(httpReq.responseText);
+                alert("Errore durante il conteggio dei ricavi");
+            }
+        }
+    }
+
+    httpReq.open("GET","json/dettagli_ordini.json");
+    httpReq.send();
+}
