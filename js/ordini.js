@@ -855,3 +855,57 @@ function caricaDettaglioOrdine(orderId){
     httpReq.open("GET","json/dettagli_ordini.json");
     httpReq.send();
 }
+
+function sendEmailWithPDFOrdine(){
+    var orderId = document.getElementById("sendPDFByEmailOrdini").value;
+    var fieldElement = document.getElementById("sendPDFByEmailOrdini");
+
+    var rows = document.getElementById("tableOrdini").tBodies[0].querySelectorAll("tr");
+
+    for(var i=0; i < rows.length; i++){
+        if(orderId && orderId !== ""){
+                if(isInt(orderId)){
+                    if(orderId > 0){
+                        removeErrorMessage(fieldElement);
+                        
+                    } else{
+                        addErrorMessage(fieldElement,"Deve essere un numero positivo");
+                    }
+                } else{
+                    addErrorMessage(fieldElement, "Deve essere un numero valido");
+                }
+        } else{
+            addErrorMessage(fieldElement, "Campo richiesto");
+        }
+
+        function addErrorMessage(element, message){
+
+            var prossimoElemento = element.nextSibling;
+
+            if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
+                prossimoElemento.innerHTML = message;
+            } else{
+
+                element.classList.add("invalid");
+
+                var errorDiv = document.createElement("div");
+                errorDiv.classList.add("invalid-feedback");
+
+                errorDiv.innerHTML = message;
+
+                element.parentNode.insertBefore(errorDiv, element.nextSibling);
+            }
+        }
+
+        function removeErrorMessage(element){
+            element.classList.remove("invalid");
+
+            var prossimoElemento = element.nextSibling;
+
+            if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
+                prossimoElemento.parentNode.removeChild(prossimoElemento);
+            }
+        }
+
+    }
+}
