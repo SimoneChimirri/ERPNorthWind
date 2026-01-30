@@ -52,6 +52,18 @@ body{
     font-size: 14px;
 }
 
+#main h2{
+    text-align: center;
+}
+
+#graphicCategories{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 #main th{
     background-color: #757575;
     color: white;

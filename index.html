@@ -4,11 +4,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="SimoneChimirri">
-    <meta name="descripton" content="Pagina iniziale di riepilogo">
+    <meta name="description" content="Pagina iniziale di riepilogo">
     <title>ERP NorthWind - Dashboard</title>
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         function toggleMenubar() {
             var menulist = document.getElementById("menulist");
@@ -21,7 +22,7 @@
         }
     </script>
 </head>
-<body>
+<body onload="caricaOrdini(); caricaProdottiConBassoStock(); caricaGraficoOrdiniPerCategoria()">
     <div class="wrapper">
         <div id="top">
             <img id="logo" src="resources/images/NorthWind logo.png">
@@ -40,9 +41,73 @@
                     <li class="menuitem"><a href="dipendenti.html"><i class="fa fa-user"></i>Dipendenti</a></li>
                 </ul>
             </div>
-            <div id="main">
+            <div id="main" class="wrapper">
                 <div id="mainHeader">
                     <h1>Dashboard</h1>
+                </div>
+                <div id="lastMonthOrders">
+                    <h2>Ordini dell'ultimo mese:</h2>
+                    <p id="lastMonthOrdersData"></p><br>
+                    <h2>Ricavi dell'ultimo mese:</h2>
+                    <p id="lastMonthRevenueData"></p>
+                </div><br><br>
+                <div id="totalOrders">
+                    <h2>Totale ordini inseriti:</h2>
+                    <p id="totalOrdersData"></p>
+                    <h2>Ricavi totali:</h2>
+                    <p id="totalRevenueData"></p>
+                </div><br><br>
+                <div id="graphicCategories">
+                    <h2>Ordini per categoria merceologica:</h2>
+                    <div style="width: 500px; height: 500px;">
+                        <canvas id="categoriesChart"></canvas>
+                    </div>
+                </div><br><br>
+                <table id="tableOrdini">
+                    <h2>Ultimi 10 ordini inseriti</h2>
+                    <thead>
+                        <tr>
+                            <th data-index="ORDER_ID">Order ID</th>
+                            <th data-index="CUSTOMER">Customer</th>
+                            <th data-index="EMPLOYEE_FIRSTNAME">Employee First Name</th>
+                            <th data-index="EMPLOYEE_LASTNAME">Employee Last Name</th>
+                            <th data-index="ORDER_DATE">Order Date</th>
+                            <th data-index="REQUIRED_DATE">Required Date</th>
+                            <th data-index="SHIPPED_DATE">Shipped Date</th>
+                            <th data-index="FREIGHT">Freight</th>
+                            <th data-index="SHIP_NAME">Ship Name</th>
+                            <th data-index="SHIP_ADDRESS">Ship Address</th>
+                            <th data-index="SHIP_CITY">Ship City</th>
+                            <th data-index="SHIP_REGION">Ship Region</th>
+                            <th data-index="SHIP_POSTAL_CODE">Ship Postal Code</th>
+                            <th data-index="SHIP_COUNTRY">Ship Country</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableOrdiniData">
+
+                    </tbody>
+                </table>
+                <br><br>
+                <table id="tableProdottiConStockBasso">
+                    <h2>Prodotti con quantità in stock inferiore a 10</h2>
+                    <thead>
+                        <tr>
+                            <th data-index="PRODUCT_ID">Product ID</th>
+                            <th data-index="PRODUCT_NAME">Product Name</th>
+                            <th data-index="SUPPLIER">Supplier</th>
+                            <th data-index="CATEGORY">Category Name</th>
+                            <th data-index="QUANTITY_PER_UNIT">Quantity Per Unit</th>
+                            <th data-index="UNIT_PRICE">Unit Price</th>
+                            <th data-index="UNITS_IN_STOCK">Units In Stock</th>
+                            <th data-index="UNITS_ON_ORDER">Units On Order</th>
+                            <th data-index="REORDER_LEVEL">Reorder Level</th>
+                            <th data-index="DISCONTINUED">Discontinued</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableProdottiConStockBassoData">
+
+                    </tbody>
+                </table>
                 </div>
             </div>
         </div>
