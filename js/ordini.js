@@ -409,13 +409,11 @@ function handlerTableOrdiniRowClick(event){
                 formField = form[fieldName];
             }
 
-            if(formField){
-                formField.value = valore;
-            }
+            formField.value = valore;
         }
     }
 
-    caricaDettaglioOrdine(form["ORDER_ID"].value);
+    caricaDettaglioOrdine(tDataList[0].innerText);
 }
 
 document.getElementById("tableOrdini").tBodies[0].addEventListener("dblclick", handlerTableOrdiniRowClick);
@@ -474,6 +472,7 @@ function caricaOrdini(){
             if(httpReq.status === 200){
                 var listaOrdini = JSON.parse(httpReq.responseText);                
                 setDipendenti();
+                setProdotti();
                 for(var i=listaOrdini.length; i > 0; i--){
                     aggiungiRigaTableOrdini(listaOrdini[i-1]);
                 }
@@ -840,6 +839,9 @@ function caricaDettaglioOrdine(orderId){
             if(httpReq.status === 200){
                 var dettaglioOrdine = JSON.parse(httpReq.responseText);
                 for(var i=dettaglioOrdine.length; i > 0; i--){
+                    if(dettaglioOrdine[i-1].ORDER_ID != orderId){
+                        continue;
+                    }
                     aggiungiRigaTableDettaglioOrdine(dettaglioOrdine[i-1]);
                 }
                 console.info("Caricamento del dettaglio ordine avvenuto con successo");
@@ -850,6 +852,6 @@ function caricaDettaglioOrdine(orderId){
         }
     }
 
-    httpReq.open("GET","json/dettagli_ordini.json?ORDER_ID="+orderId);
+    httpReq.open("GET","json/dettagli_ordini.json");
     httpReq.send();
 }
