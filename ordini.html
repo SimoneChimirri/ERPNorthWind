@@ -95,7 +95,7 @@
             </div>
         </div>
     </div>
-    <div class="wrapper" id="detail">
+    <div class="wrapper">
         <div id="form-container">
             <h3>Form Ordini:</h3>
             <form action="" method="POST" id="formOrdini">
@@ -145,24 +145,8 @@
                 <input type="reset" value="Cancella" class="btn">
             </form>
         </div>
-        <div id="main" class="wrapper">
-            <div id="mainHeader">
-                <h1>Dettaglio ordine</h1>
-            </div>
-            <table id="tableDettaglioOrdine">
-                <thead>
-                    <tr>
-                        <th data-index="PRODUCT_ID">Product ID</th>
-                        <th data-index="PRODUCT_NAME">Product Name</th>
-                        <th data-index="QUANTITY">Quantity</th>
-                        <th data-index="UNIT_PRICE">Unit Price</th>
-                        <th data-index="DISCOUNT">Discount</th>
-                    </tr>
-                </thead>
-                <tbody id="tableDettaglioOrdineData">
-                </tbody>
-            </table>
-            <div id="sidebar" class="collapsed; order-details">
+        <div class="wrapper">
+            <div id="sidebar" class="collapsed order-details">
                 <h3>Form Dettaglio Ordine</h3>
                 <form action="" method="POST" id="formDettaglioOrdine">
                     <label for="ORDER_ID">Order ID:</label>
@@ -184,6 +168,24 @@
                     <input type="reset" value="Cancella" class="btn">
                 </form>
             </div>
+            <div id="main">
+                <div id="mainHeader">
+                    <h1>Dettaglio ordine</h1>
+                </div>
+                <table id="tableDettaglioOrdine">
+                    <thead>
+                        <tr>
+                            <th data-index="PRODUCT_ID">Product ID</th>
+                            <th data-index="PRODUCT_NAME">Product Name</th>
+                            <th data-index="QUANTITY">Quantity</th>
+                            <th data-index="UNIT_PRICE">Unit Price</th>
+                            <th data-index="DISCOUNT">Discount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableDettaglioOrdineData">
+                    </tbody>
+                </table>
+        </div>
         </div>
         <div id="bottom">NorthWind</div>
     </div>
