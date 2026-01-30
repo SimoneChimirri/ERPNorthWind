@@ -218,3 +218,25 @@ function caricaProdottiConBassoStock(){
     httpReq.open("GET","json/prodotti.json");
     httpReq.send();
 }
+
+function contaOrdiniTotali(){
+
+    var httpReq = new XMLHttpRequest();
+
+    httpReq.onreadystatechange = function(){
+        if(httpReq.readyState === 4){
+            if(httpReq.status === 200){
+                var listaOrdini = JSON.parse(httpReq.responseText);
+                var totalOrders = listaOrdini.length;
+                document.getElementById("totalOrdersData").innerHTML = totalOrders;
+                console.info("Conteggio degli ordini avvenuto con successo");
+            } else{
+                console.error(httpReq.responseText);
+                alert("Errore durante il conteggio degli ordini");
+            }
+        }
+    }
+
+    httpReq.open("GET","json/ordini.json");
+    httpReq.send();
+}

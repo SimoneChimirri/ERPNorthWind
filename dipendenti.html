@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <script type="text/javascript" src="js/auth.js"></script>
     <script>
         function toggleMenubar() {
             var menulist = document.getElementById("menulist");
@@ -19,9 +20,16 @@
                 menulist.classList.add("collapsed");
             }
         }
+
+        function requireAuthAdmin(){
+            if(!isAuthenticatedAdmin()){
+                alert("Accesso non autorizzato. Solo gli amministratori possono accedere a questa pagina.");
+                window.location.href = "index.html";
+            }
+        }
     </script>
 </head>
-<body onload="caricaDipendenti()">
+<body onload="requireAuthAdmin(); caricaDipendenti()">
     <div class="wrapper">
         <div id="top">
             <img id="logo" src="resources/images/NorthWind logo.png">
@@ -38,6 +46,7 @@
                     <li class="menuitem"><a href="clienti.html"><i class="fa fa-person"></i>Clienti</a></li>
                     <li class="menuitem"><a href="spedizionieri_fornitori.html"><i class="fa fa-truck"></i>Spedizionieri e fornitori</a></li>
                     <li class="menuitem selected"><a href="dipendenti.html"><i class="fa fa-user"></i>Dipendenti</a></li>
+                    <li class="menuitem"><a href="#" onclick="logout()"><i class="fa fa-sign-out-alt"></i>Logout</a></li>
                 </ul>
             </div>
             <div id="main">

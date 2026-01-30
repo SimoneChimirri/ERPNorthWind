@@ -50,7 +50,7 @@ body {
     box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
 }
 
-button.loginbtn {
+input.loginbtn {
     width: 100%;
     padding: 12px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
