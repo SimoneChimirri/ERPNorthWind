@@ -253,3 +253,17 @@ tr:hover > td, tr.selected > td{
     margin-bottom: 20px;
 }
 
+#menubar { display: flex; }
+@media (max-width: 1024px) { #menubar { flex-direction: column; } }
+
+/* Desktop > 1024px */
+.container {margin: 0 auto;}
+
+/* Tablet 768-1024px */
+@media (max-width: 1024px) {
+  .container { flex-direction: column; padding: 20px;}
+  .nav ul { flex-direction: column; }
+  .nav li { padding: 1rem; }
+}
+
+
