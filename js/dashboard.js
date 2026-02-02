@@ -146,7 +146,7 @@ function aggiungiRigaTableOrdini(valori){
         tr.appendChild(td);
     }
 
-    tableOrdini.tBodies[0].insertBefore(tr, tableOrdini.tBodies[0].firstElementChild);
+    tableOrdini.tBodies[0].appendChild(tr);
 }
 
 function caricaOrdini(){

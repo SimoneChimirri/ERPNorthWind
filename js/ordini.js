@@ -361,7 +361,7 @@ function handlerTableOrdiniRowClick(event){
     //var sidebar = document.getElementById("sidebar");
     //sidebar.classList.remove("collapsed");
 
-    if(target.querySelectorAll("i").length > 0){
+    if(target.tagName.toUpperCase() === "TD" && target.querySelectorAll("i").length > 0){
         return;
     }
 
@@ -447,10 +447,19 @@ function handlerTableOrdiniDeleteButtonClick(event){
 
 document.getElementById("tableOrdini").tBodies[0].getElementsByTagName("i")[0];
 
+var timer;
+
 function ricercaOrdini(){
+
+    clearTimeout(timer);
+
+    timer = setTimeout(function(){
+
     var valoreDaRicercare = document.getElementById("searchFieldOrdini").value.toLowerCase();
 
-    var rows = document.getElementById("tableOrdini").tBodies[0].querySelectorAll("tr");
+    var table = document.getElementById("tableOrdini");
+
+    var rows = table.tBodies[0].querySelectorAll("tr");
 
     for(var i=0; i < rows.length; i++){
         if(!valoreDaRicercare || valoreDaRicercare===""){
@@ -461,6 +470,8 @@ function ricercaOrdini(){
             rows[i].style.display = "none";
         }
     }
+
+    }, 300);
 }
 
 function caricaOrdini(){
@@ -486,6 +497,42 @@ function caricaOrdini(){
 
     httpReq.open("GET","json/ordini.json");
     httpReq.send();
+}
+
+function selezionaOrdine(){
+
+    clearTimeout(timer);
+
+    setTimeout(function(){
+
+    var valoreDaRicercare = document.getElementById("updateFieldOrdini").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+        return;
+    }
+
+    var rows = document.getElementById("tableOrdini").tBodies[0].querySelectorAll("tr");
+
+    for(var i=0; i < rows.length; i++){
+        if(rows[i].firstElementChild.innerText === valoreDaRicercare){
+            targetRow = rows[i];
+            break;
+        }
+    }
+
+    if(targetRow){
+        const dblClickEvent = new MouseEvent('dblclick', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetRow.dispatchEvent(dblClickEvent);
+
+    }
+
+    }, 300);
+
 }
 
 function validateFormDettaglioOrdine(fieldDaValidare){
