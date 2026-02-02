@@ -294,7 +294,7 @@ function handlerTableDipendentiRowClick(event){
     var sidebar = document.getElementById("sidebar");
     sidebar.classList.remove("collapsed");
 
-    if(target.querySelectorAll("i").length > 0){
+    if(target.tagName.toUpperCase() === "TD" && target.querySelectorAll("i").length > 0){
         return;
     }
 
@@ -434,4 +434,31 @@ function caricaDipendenti(){
 
     httpReq.send();
 
+}
+
+function selezionaDipendente(){
+    var valoreDaRicercare = document.getElementById("updateFieldDipendenti").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare === "" || !isInt(valoreDaRicercare)){
+        return;
+    }   
+
+    var rows = document.getElementById("tableDipendenti").tBodies[0].querySelectorAll("tr");
+ 
+    for(var i=0; i < rows.length; i++){
+        if(rows[i].firstElementChild.innerText === valoreDaRicercare){
+            targetRow = rows[i];
+            break;
+        }
+    }
+
+    if(targetRow){
+        var dblClickEvent = new MouseEvent('dblclick', {
+                bubbles: true,
+                composed: true,
+                view: window
+            });
+
+            targetRow.dispatchEvent(dblClickEvent);
+    }
 }

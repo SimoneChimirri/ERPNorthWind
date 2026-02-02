@@ -1,5 +1,17 @@
 var selectedRow;
 
+function isInt(value){
+    try {
+        if (isNaN(value)){
+            return false;
+        }
+        var x = parseFloat(value);
+        return Math.floor(x) === x;
+    } catch (e) {
+        return false;
+    }
+}
+
 function validateFormClienti(fieldDaValidare){
     var form = document.getElementById("formClienti");
 
@@ -215,7 +227,7 @@ function handlerTableClientiRowClick(event){
     var sidebar = document.getElementById("sidebar");
     sidebar.classList.remove("collapsed");
 
-    if(target.querySelectorAll("i").length > 0){
+    if(target.tagName.toUpperCase() === "TD" && target.querySelectorAll("i").length > 0){
         return;
     }
 
@@ -333,4 +345,32 @@ function caricaClienti(){
 
     httpReq.open("GET","json/clienti.json");
     httpReq.send();
+}
+
+function selezionaCliente(){
+    var valoreDaRicercare = document.getElementById("updateFieldClienti").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+        return;
+    }
+
+    var rows = document.getElementById("tableClienti").tBodies[0].querySelectorAll("tr");
+
+    for(var i=0; i < rows.length; i++){
+        if(rows[i].firstElementChild.innerText === valoreDaRicercare){
+            targetRow = rows[i];
+            break;
+        }
+    }
+
+    if(targetRow){
+        const dblClickEvent = new MouseEvent('dblclick', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetRow.dispatchEvent(dblClickEvent);
+
+    }
 }
