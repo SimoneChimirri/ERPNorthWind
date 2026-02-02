@@ -353,6 +353,37 @@ function selezionaSpedizioniere(){
 
 }
 
+function eliminaSpedizioniere(){
+
+    var valoreDaRicercare = document.getElementById("deleteFieldSpedizionieri").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+        return;
+    }
+
+    var rows = document.getElementById("tableSpedizionieri").tBodies[0].querySelectorAll("tr");
+    var targetIcon = null;
+
+    for(var i=0; i < rows.length; i++){
+        if(valoreDaRicercare === rows[i].firstElementChild.innerText){
+            targetIcon = rows[i].querySelectorAll("i")[0];
+            break;
+        }
+    }
+
+    if(targetIcon){
+        var clickEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetIcon.dispatchEvent(clickEvent);
+    }
+
+
+}
+
 function validateFormFornitori(fieldDaValidare){
     var form = document.getElementById("formFornitori");
 
@@ -704,5 +735,34 @@ function selezionaFornitore(){
         });
 
         targetRow.dispatchEvent(dblClickEvent);
+    }
+}
+
+function eliminaFornitore(){
+
+    var valoreDaRicercare = document.getElementById("deleteFieldFornitori").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+        return;
+    }
+
+    var rows = document.getElementById("tableFornitori").tBodies[0].querySelectorAll("tr");
+    var targetIcon = null;
+
+    for(var i=0; i < rows.length; i++){
+        if(valoreDaRicercare === rows[i].firstElementChild.innerText){
+            targetIcon = rows[i].querySelectorAll("i")[0];
+            break;
+        }
+    }
+
+    if(targetIcon){
+        var clickEvent = new MouseEvent('click',{
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetIcon.dispatchEvent(clickEvent);
     }
 }

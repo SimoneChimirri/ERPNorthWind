@@ -535,6 +535,42 @@ function selezionaOrdine(){
 
 }
 
+function eliminaOrdine(){
+
+    clearTimeout(timer);
+
+    setTimeout(function(){
+
+    var valoreDaRicercare = document.getElementById("deleteFieldOrdini").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+        return;
+    }
+
+    var rows = document.getElementById("tableOrdini").tBodies[0].querySelectorAll("tr");
+    var targetIcon = null;
+
+    for(var i=0; i < rows.length; i++){
+        if(rows[i].firstElementChild.innerText === valoreDaRicercare){
+            targetIcon = rows[i].querySelectorAll("i")[0];
+            break;
+        }
+    }
+
+    if(targetIcon){
+        const clickEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetIcon.dispatchEvent(clickEvent);
+
+    }
+
+    }, 300);
+}
+
 function validateFormDettaglioOrdine(fieldDaValidare){
     var form = document.getElementById("formDettaglioOrdine");
 

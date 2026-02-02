@@ -462,3 +462,31 @@ function selezionaDipendente(){
             targetRow.dispatchEvent(dblClickEvent);
     }
 }
+
+function eliminaDipendente(){
+    var valoreDaRicercare = document.getElementById("deleteFieldDipendenti").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare === "" || !isInt(valoreDaRicercare)){
+        return;
+    }   
+
+    var rows = document.getElementById("tableDipendenti").tBodies[0].querySelectorAll("tr");
+    var targetIcon = null;
+ 
+    for(var i=0; i < rows.length; i++){
+        if(rows[i].firstElementChild.innerText === valoreDaRicercare){
+            targetIcon = rows[i].querySelectorAll("i")[0];
+            break;
+        }
+    }
+
+    if(targetIcon){
+        var clickEvent = new MouseEvent('click', {
+                bubbles: true,
+                composed: true,
+                view: window
+            });
+
+            targetIcon.dispatchEvent(clickEvent);
+    }
+}

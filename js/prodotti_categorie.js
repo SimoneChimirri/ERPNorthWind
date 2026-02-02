@@ -370,6 +370,35 @@ function selezionaProdotto(){
 
 }
 
+function eliminaProdotto(){
+
+    var valoreDaRicercare = document.getElementById("deleteFieldProdotti").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+        return;
+    }
+
+    var rows = document.getElementById("tableProdotti").tBodies[0].querySelectorAll("tr");
+    var targetIcon = null;
+
+    for(var i=0; i < rows.length; i++){
+        if(valoreDaRicercare === rows[i].firstElementChild.innerText){
+            targetIcon = rows[i].querySelectorAll("i")[0];
+            break;
+        }
+    }
+
+    if(targetIcon){
+        var clickEvent = new MouseEvent('click',{
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetIcon.dispatchEvent(clickEvent);
+    }
+}
+
 function validateFormCategorie(fieldDaValidare){
     var form = document.getElementById("formCategorie");
 
@@ -689,5 +718,34 @@ function selezionaCategoria(){
         });
 
         targetRow.dispatchEvent(dblClickEvent);
+    }
+}
+
+function eliminaCategoria(){
+
+    var valoreDaRicercare = document.getElementById("deleteFieldCategorie").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+        return;
+    }
+
+    var rows = document.getElementById("tableCategorie").tBodies[0].querySelectorAll("tr");
+    var targetIcon = null;
+
+    for(var i=0; i < rows.length; i++){
+        if(valoreDaRicercare === rows[i].firstElementChild.innerText){
+            targetIcon= rows[i].querySelectorAll("i")[0];
+            break;
+        }
+    }
+
+    if(targetIcon){
+        var clickEvent = new MouseEvent('click',{
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetIcon.dispatchEvent(clickEvent);
     }
 }
