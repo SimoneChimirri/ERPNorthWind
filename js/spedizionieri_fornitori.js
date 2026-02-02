@@ -1,5 +1,17 @@
 var selectedRow;
 
+function isInt(value){
+    try {
+        if (isNaN(value)){
+            return false;
+        }
+        var x = parseFloat(value);
+        return Math.floor(x) === x;
+    } catch (e) {
+        return false;
+    }
+}
+
 function validateFormSpedizionieri(fieldDaValidare){
     var form = document.getElementById("formSpedizionieri");
 
@@ -201,7 +213,7 @@ function handlerTableSpedizionieriRowClick(event){
     var sidebar = document.getElementById("sidebar");
     sidebar.classList.remove("collapsed");
 
-    if(target.querySelectorAll("i").length > 0){
+    if(target.tagName.toUpperCase()==="TD" && target.querySelectorAll("i").length > 0){
         return;
     }
 
@@ -308,6 +320,37 @@ function caricaSpedizionieri(){
 
     httpReq.open("GET","json/spedizionieri.json");
     httpReq.send();
+}
+
+function selezionaSpedizioniere(){
+
+    var valoreDaRicercare = document.getElementById("updateFieldSpedizionieri").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+        return;
+    }
+
+    var rows = document.getElementById("tableSpedizionieri").tBodies[0].querySelectorAll("tr");
+    var targetRow = null;
+
+    for(var i=0; i < rows.length; i++){
+        if(valoreDaRicercare === rows[i].firstElementChild.innerText){
+            targetRow = rows[i];
+            break;
+        }
+    }
+
+    if(targetRow){
+        var dblClickEvent = new MouseEvent('dblclick', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetRow.dispatchEvent(dblClickEvent);
+    }
+
+
 }
 
 function validateFormFornitori(fieldDaValidare){
@@ -515,7 +558,7 @@ function handlerTableFornitoriRowClick(event){
     var sidebar = document.getElementById("sidebar");
     sidebar.classList.remove("collapsed");
 
-    if(target.querySelectorAll("i").length > 0){
+    if(target.tagName.toUpperCase()==="TD" && target.querySelectorAll("i").length > 0){
         return;
     }
 
@@ -633,4 +676,33 @@ function caricaFornitori(){
 
     httpReq.open("GET","json/fornitori.json");
     httpReq.send();
+}
+
+function selezionaFornitore(){
+
+    var valoreDaRicercare = document.getElementById("updateFieldFornitori").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+        return;
+    }
+
+    var rows = document.getElementById("tableFornitori").tBodies[0].querySelectorAll("tr");
+    var targetRow = null;
+
+    for(var i=0; i < rows.length; i++){
+        if(valoreDaRicercare === rows[i].firstElementChild.innerText){
+            targetRow = rows[i];
+            break;
+        }
+    }
+
+    if(targetRow){
+        var dblClickEvent = new MouseEvent('dblclick',{
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetRow.dispatchEvent(dblClickEvent);
+    }
 }

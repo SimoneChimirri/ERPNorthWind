@@ -225,7 +225,7 @@ function handlerTableProdottiRowClick(event){
     var sidebar = document.getElementById("sidebar");
     sidebar.classList.remove("collapsed");
 
-    if(target.querySelectorAll("i").length > 0){
+    if(target.tagName.toUpperCase()==="TD" && target.querySelectorAll("i").length > 0){
         return;
     }
 
@@ -339,6 +339,35 @@ function caricaProdotti(){
 
     httpReq.open("GET","json/prodotti.json");
     httpReq.send();
+}
+
+function selezionaProdotto(){
+    var valoreDaRicercare = document.getElementById("updateFieldProdotti").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+        return;
+    }
+
+    var rows = document.getElementById("tableProdotti").tBodies[0].querySelectorAll("tr");
+    var targetRow = null;
+
+    for(var i=0; i < rows.length; i++){
+        if(valoreDaRicercare === rows[i].firstElementChild.innerText){
+            targetRow = rows[i];
+            break;
+        }
+    }
+
+    if(targetRow){
+        var dblClickEvent = new MouseEvent('dblclick',{
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetRow.dispatchEvent(dblClickEvent);
+    }
+
 }
 
 function validateFormCategorie(fieldDaValidare){
@@ -525,7 +554,7 @@ function handlerTableCategorieRowClick(event){
     var sidebar = document.getElementById("sidebar");
     sidebar.classList.remove("collapsed");
 
-    if(target.querySelectorAll("i").length > 0){
+    if(target.tagName.toUpperCase()==="TD" && target.querySelectorAll("i").length > 0){
         return;
     }
 
@@ -632,4 +661,33 @@ function caricaCategorie(){
 
     httpReq.open("GET","json/categorie.json");
     httpReq.send();
+}
+
+function selezionaCategoria(){
+
+    var valoreDaRicercare = document.getElementById("updateFieldCategorie").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+        return;
+    }
+
+    var rows = document.getElementById("tableCategorie").tBodies[0].querySelectorAll("tr");
+    var targetRow = null;
+
+    for(var i=0; i < rows.length; i++){
+        if(valoreDaRicercare === rows[i].firstElementChild.innerText){
+            targetRow = rows[i];
+            break;
+        }
+    }
+
+    if(targetRow){
+        var dblClickEvent = new MouseEvent('dblclick',{
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetRow.dispatchEvent(dblClickEvent);
+    }
 }
