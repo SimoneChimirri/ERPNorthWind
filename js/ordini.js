@@ -944,12 +944,18 @@ function sendEmailWithPDFOrdine(){
     var fieldElement = document.getElementById("sendPDFByEmailOrdini");
 
     var rows = document.getElementById("tableOrdini").tBodies[0].querySelectorAll("tr");
+    var rowTarget = null;
 
     for(var i=0; i < rows.length; i++){
         if(orderId && orderId !== ""){
                 if(isInt(orderId)){
                     if(orderId > 0){
                         removeErrorMessage(fieldElement);
+                        if(rows[i].firstElementChild.innerText === orderId){
+                            rowTarget = rows[i];
+                            fieldElement.value = "";
+                            break;
+                        }
                         
                     } else{
                         addErrorMessage(fieldElement,"Deve essere un numero positivo");
@@ -991,4 +997,207 @@ function sendEmailWithPDFOrdine(){
         }
 
     }
+
+    if(rowTarget){
+        var tDataList = rowTarget.querySelectorAll("td");
+        var tableOrdini = document.getElementById("tableOrdini");
+        var headerFieldList = tableOrdini.tHead.getElementsByTagName("th");
+        
+        var ordineData = {};
+        for(var j = 0; j < headerFieldList.length; j++){
+            var fieldName = headerFieldList[j].getAttribute("data-index");
+            if(fieldName && fieldName !== ""){
+                ordineData[fieldName] = tDataList[j].innerText;
+            }
+        }
+        
+        var httpReq = new XMLHttpRequest();
+        
+        httpReq.onreadystatechange = function(){
+            if(httpReq.readyState === 4){
+                if(httpReq.status === 200){
+                    var dettaglioOrdine = JSON.parse(httpReq.responseText);
+                    var dettagliPerOrdine = [];
+                    
+                    for(var k = 0; k < dettaglioOrdine.length; k++){
+                        if(dettaglioOrdine[k].ORDER_ID == orderId){
+                            dettagliPerOrdine.push(dettaglioOrdine[k]);
+                        }
+                    }
+                    
+                    console.info("Caricamento dei dettagli dell'ordine avvenuto con successo");
+                    generaPDFOrdine(ordineData, dettagliPerOrdine, orderId);
+                } else{
+                    console.error(httpReq.responseText);
+                    alert("Errore durante il caricamento dei dettagli dell'ordine");
+                }
+            }
+        }
+        
+        httpReq.open("GET","json/dettagli_ordini.json");
+        httpReq.send();
+    }
+}
+
+function generaPDFOrdine(ordineData, dettagliPerOrdine, orderId){
+    var contentHTML = '<div style="font-family: Arial, sans-serif; padding: 20px;">';
+    contentHTML += '<h1 style="text-align: center; color: #333;">ORDINE #' + orderId + '</h1>';
+    contentHTML += '<hr style="border: 1px solid #ccc; margin: 20px 0;">';
+    
+    contentHTML += '<div style="margin-bottom: 20px;">';
+    contentHTML += '<h2 style="color: #555;">Informazioni Ordine</h2>';
+    contentHTML += '<table style="width: 100%; border-collapse: collapse;">';
+    
+    var rowHTML = '<tr>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;"><strong>Cliente:</strong></td>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;">' + (ordineData.CUSTOMER || '') + '</td>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;"><strong>Data Ordine:</strong></td>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;">' + (ordineData.ORDER_DATE || '') + '</td>';
+    rowHTML += '</tr>';
+    
+    rowHTML += '<tr>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;"><strong>Dipendente:</strong></td>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;">' + (ordineData.EMPLOYEE_FIRSTNAME || '') + ' ' + (ordineData.EMPLOYEE_LASTNAME || '') + '</td>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;"><strong>Spedizioniere:</strong></td>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;">' + (ordineData.SHIPPER_NAME || '') + '</td>';
+    rowHTML += '</tr>';
+    
+    rowHTML += '<tr>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;"><strong>Data Richiesta:</strong></td>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;">' + (ordineData.REQUIRED_DATE || '') + '</td>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;"><strong>Data Spedizione:</strong></td>';
+    rowHTML += '<td style="padding: 8px; border: 1px solid #ddd;">' + (ordineData.SHIPPED_DATE || '') + '</td>';
+    rowHTML += '</tr>';
+    
+    contentHTML += rowHTML + '</table>';
+    contentHTML += '</div>';
+    
+    contentHTML += '<div style="margin-bottom: 20px;">';
+    contentHTML += '<h2 style="color: #555;">Indirizzo Spedizione</h2>';
+    contentHTML += '<table style="width: 100%; border-collapse: collapse;">';
+    contentHTML += '<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Nome:</strong> ' + (ordineData.SHIP_NAME || '') + '</td></tr>';
+    contentHTML += '<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Indirizzo:</strong> ' + (ordineData.SHIP_ADDRESS || '') + '</td></tr>';
+    contentHTML += '<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Città:</strong> ' + (ordineData.SHIP_CITY || '') + ' - <strong>CAP:</strong> ' + (ordineData.SHIP_POSTAL_CODE || '') + '</td></tr>';
+    contentHTML += '<tr><td style="padding: 8px; border: 1px solid #ddd;"><strong>Regione:</strong> ' + (ordineData.SHIP_REGION || 'N/A') + ' - <strong>Paese:</strong> ' + (ordineData.SHIP_COUNTRY || '') + '</td></tr>';
+    contentHTML += '</table>';
+    contentHTML += '</div>';
+    
+    contentHTML += '<div style="margin-bottom: 20px;">';
+    contentHTML += '<h2 style="color: #555;">Dettagli Prodotti</h2>';
+    contentHTML += '<table style="width: 100%; border-collapse: collapse;">';
+    contentHTML += '<thead><tr style="background-color: #e8e8e8;">';
+    contentHTML += '<th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Product ID</th>';
+    contentHTML += '<th style="padding: 8px; border: 1px solid #ddd; text-align: left;">Product Name</th>';
+    contentHTML += '<th style="padding: 8px; border: 1px solid #ddd; text-align: center;">Quantità</th>';
+    contentHTML += '<th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Prezzo Unitario</th>';
+    contentHTML += '<th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Sconto</th>';
+    contentHTML += '<th style="padding: 8px; border: 1px solid #ddd; text-align: right;">Totale</th>';
+    contentHTML += '</tr></thead><tbody>';
+    
+    var totalOrdine = 0;
+    var prodotti = getProdotti();
+    
+    for(var m = 0; m < dettagliPerOrdine.length; m++){
+        var dettaglio = dettagliPerOrdine[m];
+        var nomeProdotto = '';
+        
+        for(var p = 0; p < prodotti.length; p++){
+            if(prodotti[p].PRODUCT_ID == dettaglio.PRODUCT_ID){
+                nomeProdotto = prodotti[p].PRODUCT_NAME;
+                break;
+            }
+        }
+        
+        var subtotale = dettaglio.QUANTITY * dettaglio.UNIT_PRICE;
+        var sconto = subtotale * dettaglio.DISCOUNT;
+        var totaleRiga = subtotale - sconto;
+        totalOrdine += totaleRiga;
+        
+        contentHTML += '<tr>';
+        contentHTML += '<td style="padding: 8px; border: 1px solid #ddd;">' + dettaglio.PRODUCT_ID + '</td>';
+        contentHTML += '<td style="padding: 8px; border: 1px solid #ddd;">' + nomeProdotto + '</td>';
+        contentHTML += '<td style="padding: 8px; border: 1px solid #ddd; text-align: center;">' + dettaglio.QUANTITY + '</td>';
+        contentHTML += '<td style="padding: 8px; border: 1px solid #ddd; text-align: right;">€ ' + dettaglio.UNIT_PRICE.toFixed(2) + '</td>';
+        contentHTML += '<td style="padding: 8px; border: 1px solid #ddd; text-align: right;">' + (dettaglio.DISCOUNT * 100).toFixed(0) + '%</td>';
+        contentHTML += '<td style="padding: 8px; border: 1px solid #ddd; text-align: right;">€ ' + totaleRiga.toFixed(2) + '</td>';
+        contentHTML += '</tr>';
+    }
+    
+    contentHTML += '</tbody></table>';
+    contentHTML += '</div>';
+    
+    contentHTML += '<div style="margin-top: 20px; text-align: right;">';
+    contentHTML += '<p style="font-size: 16px;"><strong>Totale Ordine:</strong> € ' + totalOrdine.toFixed(2) + '</p>';
+    contentHTML += '<p style="font-size: 16px;"><strong>Spese di Spedizione:</strong> € ' + (ordineData.FREIGHT || '0.00') + '</p>';
+    var totaleFinale = totalOrdine + parseFloat(ordineData.FREIGHT || 0);
+    contentHTML += '<p style="font-size: 18px; color: #d9534f;"><strong>Importo Totale:</strong> € ' + totaleFinale.toFixed(2) + '</p>';
+    contentHTML += '</div>';
+    
+    contentHTML += '<hr style="border: 1px solid #ccc; margin: 20px 0;">';
+    contentHTML += '<p style="text-align: center; color: #999; font-size: 12px;">Documento generato automaticamente il ' + new Date().toLocaleDateString('it-IT') + '</p>';
+    contentHTML += '</div>';
+    
+    var tempDiv = document.createElement('div');
+    tempDiv.innerHTML = contentHTML;
+    tempDiv.style.display = 'none';
+    document.body.appendChild(tempDiv);
+    
+    var opt = {
+        margin: 10,
+        filename: 'ordine_' + orderId + '.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+    };
+    
+    if(typeof html2pdf !== 'undefined'){
+        html2pdf().set(opt).from(tempDiv).toPdf().get('pdf').then(function(pdf) {
+            inviaEmailConPDF(ordineData, pdf, orderId);
+            document.body.removeChild(tempDiv);
+        });
+    } else{
+        console.error('html2pdf library not found. Please include html2pdf.js in your HTML file.');
+        alert('Errore: libreria html2pdf non disponibile.');
+        document.body.removeChild(tempDiv);
+    }
+}
+
+function inviaEmailConPDF(ordineData, pdf, orderId){
+    emailjs.init("YOUR_PUBLIC_KEY");
+    
+    var emailDestinazione = prompt('Inserire l\'email del destinatario:');
+    
+    if(!emailDestinazione || !isValidEmail(emailDestinazione)){
+        alert('Email non valida');
+        return;
+    }
+    
+    var pdfBase64 = pdf.output('datauristring');
+    
+    var templateParams = {
+        to_email: emailDestinazione,
+        customer_name: ordineData.CUSTOMER,
+        order_id: orderId,
+        order_date: ordineData.ORDER_DATE,
+        employee_name: ordineData.EMPLOYEE_FIRSTNAME + ' ' + ordineData.EMPLOYEE_LASTNAME,
+        shipper: ordineData.SHIPPER_NAME,
+        ship_address: ordineData.SHIP_ADDRESS,
+        ship_city: ordineData.SHIP_CITY,
+        ship_country: ordineData.SHIP_COUNTRY,
+        message: 'Gentile ' + ordineData.CUSTOMER + ',\n\nIn allegato troverete i dettagli dell\'ordine #' + orderId + ' del ' + ordineData.ORDER_DATE + '.\n\nCordiali saluti,\nNorthWind'
+    };
+    
+    emailjs.send("SERVICE_ID", "TEMPLATE_ID", templateParams)
+        .then(function(response) {
+            console.log("Email inviata con successo!", response.status, response.text);
+            alert('Email inviata con successo a ' + emailDestinazione + '!');
+        }, function(error) {
+            console.error("Errore nell'invio dell'email:", error);
+            alert('Errore durante l\'invio della email: ' + error.text);
+        });
+}
+
+function isValidEmail(email){
+    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
 }
