@@ -12,37 +12,37 @@ function isInt(value){
     }
 }
 
+function addErrorMessage(element, message){
+
+    var prossimoElemento = element.nextSibling;
+
+    if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
+        prossimoElemento.innerHTML = message;
+    } else{
+
+        element.classList.add("invalid");
+
+        var errorDiv = document.createElement("div");
+        errorDiv.classList.add("invalid-feedback");
+
+        errorDiv.innerHTML = message;
+
+        element.parentNode.insertBefore(errorDiv, element.nextSibling);
+    }
+}
+
+function removeErrorMessage(element){
+    element.classList.remove("invalid");
+
+    var prossimoElemento = element.nextSibling;
+
+    if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
+        prossimoElemento.parentNode.removeChild(prossimoElemento);
+    }
+}
+
 function validateFormClienti(fieldDaValidare){
     var form = document.getElementById("formClienti");
-
-    function addErrorMessage(element, message){
-
-        var prossimoElemento = element.nextSibling;
-
-        if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-            prossimoElemento.innerHTML = message;
-        } else{
-
-            element.classList.add("invalid");
-
-            var errorDiv = document.createElement("div");
-            errorDiv.classList.add("invalid-feedback");
-
-            errorDiv.innerHTML = message;
-
-            element.parentNode.insertBefore(errorDiv, element.nextSibling);
-        }
-    }
-
-    function removeErrorMessage(element){
-        element.classList.remove("invalid");
-
-        var prossimoElemento = element.nextSibling;
-
-        if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-            prossimoElemento.parentNode.removeChild(prossimoElemento);
-        }
-    }
 
     function validateField(fieldDaValidare){
         var isCampoValid = true;
@@ -350,8 +350,14 @@ function caricaClienti(){
 function selezionaCliente(){
     var valoreDaRicercare = document.getElementById("updateFieldClienti").value;
 
-    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+    if(!valoreDaRicercare || valoreDaRicercare===""){
+        addErrorMessage(document.getElementById("updateFieldClienti"), "Campo richiesto");
         return;
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("updateFieldClienti"),"Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("updateFieldClienti"));
     }
 
     var rows = document.getElementById("tableClienti").tBodies[0].querySelectorAll("tr");
@@ -376,10 +382,16 @@ function selezionaCliente(){
 }
 
 function eliminaCliente(){
-    var valoreDaRicercare = document.getElementById("updateFieldClienti").value;
+    var valoreDaRicercare = document.getElementById("deleteFieldClienti").value;
 
-    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+    if(!valoreDaRicercare || valoreDaRicercare===""){
+        addErrorMessage(document.getElementById("deleteFieldClienti"), "Campo richiesto");
         return;
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("deleteFieldClienti"), "Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("deleteFieldClienti"));
     }
 
     var rows = document.getElementById("tableClienti").tBodies[0].querySelectorAll("tr");

@@ -12,37 +12,38 @@ function isInt(value){
     }
 }
 
+
+function addErrorMessage(element, message){
+
+    var prossimoElemento = element.nextSibling;
+
+    if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
+        prossimoElemento.innerHTML = message;
+    } else{
+
+        element.classList.add("invalid");
+
+        var errorDiv = document.createElement("div");
+        errorDiv.classList.add("invalid-feedback");
+
+        errorDiv.innerHTML = message;
+
+        element.parentNode.insertBefore(errorDiv, element.nextSibling);
+    }
+}
+
+function removeErrorMessage(element){
+    element.classList.remove("invalid");
+
+    var prossimoElemento = element.nextSibling;
+
+    if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
+        prossimoElemento.parentNode.removeChild(prossimoElemento);
+    }
+}
+
 function validateFormSpedizionieri(fieldDaValidare){
     var form = document.getElementById("formSpedizionieri");
-
-    function addErrorMessage(element, message){
-
-        var prossimoElemento = element.nextSibling;
-
-        if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-            prossimoElemento.innerHTML = message;
-        } else{
-
-            element.classList.add("invalid");
-
-            var errorDiv = document.createElement("div");
-            errorDiv.classList.add("invalid-feedback");
-
-            errorDiv.innerHTML = message;
-
-            element.parentNode.insertBefore(errorDiv, element.nextSibling);
-        }
-    }
-
-    function removeErrorMessage(element){
-        element.classList.remove("invalid");
-
-        var prossimoElemento = element.nextSibling;
-
-        if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-            prossimoElemento.parentNode.removeChild(prossimoElemento);
-        }
-    }
 
     function validateField(fieldDaValidare){
         var isCampoValid = true;
@@ -326,8 +327,14 @@ function selezionaSpedizioniere(){
 
     var valoreDaRicercare = document.getElementById("updateFieldSpedizionieri").value;
 
-    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+    if(!valoreDaRicercare || valoreDaRicercare===""){
+        addErrorMessage(document.getElementById("updateFieldSpedizionieri"), "Campo richiesto");
         return;
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("updateFieldSpedizionieri"), "Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("updateFieldSpedizionieri"));
     }
 
     var rows = document.getElementById("tableSpedizionieri").tBodies[0].querySelectorAll("tr");
@@ -357,8 +364,14 @@ function eliminaSpedizioniere(){
 
     var valoreDaRicercare = document.getElementById("deleteFieldSpedizionieri").value;
 
-    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+    if(!valoreDaRicercare || valoreDaRicercare===""){
+        addErrorMessage(document.getElementById("deleteFieldSpedizionieri"), "Campo richiesto");
         return;
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("deleteFieldSpedizionieri"), "Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("deleteFieldSpedizionieri"));
     }
 
     var rows = document.getElementById("tableSpedizionieri").tBodies[0].querySelectorAll("tr");
@@ -393,35 +406,6 @@ function esportaSpedizionieriExcel(){
 
 function validateFormFornitori(fieldDaValidare){
     var form = document.getElementById("formFornitori");
-
-    function addErrorMessage(element, message){
-
-        var prossimoElemento = element.nextSibling;
-
-        if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-            prossimoElemento.innerHTML = message;
-        } else{
-
-            element.classList.add("invalid");
-
-            var errorDiv = document.createElement("div");
-            errorDiv.classList.add("invalid-feedback");
-
-            errorDiv.innerHTML = message;
-
-            element.parentNode.insertBefore(errorDiv, element.nextSibling);
-        }
-    }
-
-    function removeErrorMessage(element){
-        element.classList.remove("invalid");
-
-        var prossimoElemento = element.nextSibling;
-
-        if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-            prossimoElemento.parentNode.removeChild(prossimoElemento);
-        }
-    }
 
     function validateField(fieldDaValidare){
         var isCampoValid = true;
@@ -720,8 +704,14 @@ function selezionaFornitore(){
 
     var valoreDaRicercare = document.getElementById("updateFieldFornitori").value;
 
-    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+    if(!valoreDaRicercare || valoreDaRicercare===""){
+        addErrorMessage(document.getElementById("updateFieldFornitori"), "Campo richiesto");
         return;
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("updateFieldFornitori"), "Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("updateFieldFornitori"));
     }
 
     var rows = document.getElementById("tableFornitori").tBodies[0].querySelectorAll("tr");
@@ -749,8 +739,14 @@ function eliminaFornitore(){
 
     var valoreDaRicercare = document.getElementById("deleteFieldFornitori").value;
 
-    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+    if(!valoreDaRicercare || valoreDaRicercare===""){
+        addErrorMessage(document.getElementById("deleteFieldFornitori"), "Campo richiesto");
         return;
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("deleteFieldFornitori"), "Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("deleteFieldFornitori"));
     }
 
     var rows = document.getElementById("tableFornitori").tBodies[0].querySelectorAll("tr");

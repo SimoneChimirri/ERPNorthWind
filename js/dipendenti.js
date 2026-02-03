@@ -45,37 +45,38 @@ function isInt(value){
     }
 }
 
+
+function addErrorMessage(element, message){
+
+    var prossimoElemento = element.nextSibling;
+
+    if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
+        prossimoElemento.innerHTML = message;
+    } else{
+
+        element.classList.add("invalid");
+
+        var errorDiv = document.createElement("div");
+        errorDiv.classList.add("invalid-feedback");
+        errorDiv.innerHTML = message;
+
+        element.parentNode.insertBefore(errorDiv, prossimoElemento);
+    }
+}
+
+function removeErrorMessage(element){
+    element.classList.remove("invalid");
+
+    var prossimoElemento = element.nextSibling;
+
+    prossimoElemento.classList.remove("invalid-feedback");
+    element.parentNode.removeChild(prossimoElemento);
+
+}
+
 function validateFormDipendenti(fieldDaValidare){
 
     var form = document.getElementById("formDipendenti");
-
-    function addErrorMessage(element, message){
-
-        var prossimoElemento = element.nextSibling;
-
-        if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-            prossimoElemento.innerHTML = message;
-        } else{
-
-            element.classList.add("invalid");
-
-            var errorDiv = document.createElement("div");
-            errorDiv.classList.add("invalid-feedback");
-            errorDiv.innerHTML = message;
-
-            element.parentNode.insertBefore(errorDiv, prossimoElemento);
-        }
-    }
-
-    function removeErrorMessage(element){
-        element.classList.remove("invalid");
-
-        var prossimoElemento = element.nextSibling;
-
-        prossimoElemento.classList.remove("invalid-feedback");
-        element.parentNode.removeChild(prossimoElemento);
-
-    }
 
     function validateField(fieldDaValidare){
         var isCampoValid = true;
@@ -439,9 +440,15 @@ function caricaDipendenti(){
 function selezionaDipendente(){
     var valoreDaRicercare = document.getElementById("updateFieldDipendenti").value;
 
-    if(!valoreDaRicercare || valoreDaRicercare === "" || !isInt(valoreDaRicercare)){
+    if(!valoreDaRicercare || valoreDaRicercare === ""){
+        addErrorMessage(document.getElementById("updateFieldDipendenti"), "Campo richiesto");
         return;
-    }   
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("updateFieldDipendenti"), "Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("updateFieldDipendenti"));
+    }
 
     var rows = document.getElementById("tableDipendenti").tBodies[0].querySelectorAll("tr");
  
@@ -466,8 +473,14 @@ function selezionaDipendente(){
 function eliminaDipendente(){
     var valoreDaRicercare = document.getElementById("deleteFieldDipendenti").value;
 
-    if(!valoreDaRicercare || valoreDaRicercare === "" || !isInt(valoreDaRicercare)){
+    if(!valoreDaRicercare || valoreDaRicercare === ""){
+        addErrorMessage(document.getElementById("deleteFieldDipendenti"), "Campo richiesto");
         return;
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("deleteFieldDipendenti"), "Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("deleteFieldDipendenti"));
     }   
 
     var rows = document.getElementById("tableDipendenti").tBodies[0].querySelectorAll("tr");

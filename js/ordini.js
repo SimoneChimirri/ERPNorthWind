@@ -100,37 +100,37 @@ function isInt(value){
     }
 }
 
+function addErrorMessage(element, message){
+
+    var prossimoElemento = element.nextSibling;
+
+    if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
+        prossimoElemento.innerHTML = message;
+    } else{
+
+        element.classList.add("invalid");
+
+        var errorDiv = document.createElement("div");
+        errorDiv.classList.add("invalid-feedback");
+
+        errorDiv.innerHTML = message;
+
+        element.parentNode.insertBefore(errorDiv, element.nextSibling);
+    }
+}
+
+function removeErrorMessage(element){
+    element.classList.remove("invalid");
+
+    var prossimoElemento = element.nextSibling;
+
+    if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
+        prossimoElemento.parentNode.removeChild(prossimoElemento);
+    }
+}
+
 function validateFormOrdini(fieldDaValidare){
     var form = document.getElementById("formOrdini");
-
-    function addErrorMessage(element, message){
-
-        var prossimoElemento = element.nextSibling;
-
-        if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-            prossimoElemento.innerHTML = message;
-        } else{
-
-            element.classList.add("invalid");
-
-            var errorDiv = document.createElement("div");
-            errorDiv.classList.add("invalid-feedback");
-
-            errorDiv.innerHTML = message;
-
-            element.parentNode.insertBefore(errorDiv, element.nextSibling);
-        }
-    }
-
-    function removeErrorMessage(element){
-        element.classList.remove("invalid");
-
-        var prossimoElemento = element.nextSibling;
-
-        if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-            prossimoElemento.parentNode.removeChild(prossimoElemento);
-        }
-    }
 
     function validateField(fieldDaValidare){
         var isCampoValid = true;
@@ -507,8 +507,14 @@ function selezionaOrdine(){
 
     var valoreDaRicercare = document.getElementById("updateFieldOrdini").value;
 
-    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+    if(!valoreDaRicercare || valoreDaRicercare===""){
+        addErrorMessage(document.getElementById("updateFieldOrdini"), "Campo richiesto");
         return;
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("updateFieldOrdini"), "Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("updateFieldOrdini"));
     }
 
     var rows = document.getElementById("tableOrdini").tBodies[0].querySelectorAll("tr");
@@ -543,8 +549,14 @@ function eliminaOrdine(){
 
     var valoreDaRicercare = document.getElementById("deleteFieldOrdini").value;
 
-    if(!valoreDaRicercare || valoreDaRicercare==="" || !isInt(valoreDaRicercare)){
+    if(!valoreDaRicercare || valoreDaRicercare===""){
+        addErrorMessage(document.getElementById("deleteFieldOrdini"), "Campo richiesto");
         return;
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("deleteFieldOrdini"), "Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("deleteFieldOrdini"));
     }
 
     var rows = document.getElementById("tableOrdini").tBodies[0].querySelectorAll("tr");
@@ -580,35 +592,6 @@ function esportaOrdiniExcel(){
 
 function validateFormDettaglioOrdine(fieldDaValidare){
     var form = document.getElementById("formDettaglioOrdine");
-
-    function addErrorMessage(element, message){
-
-        var prossimoElemento = element.nextSibling;
-
-        if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-            prossimoElemento.innerHTML = message;
-        } else{
-
-            element.classList.add("invalid");
-
-            var errorDiv = document.createElement("div");
-            errorDiv.classList.add("invalid-feedback");
-
-            errorDiv.innerHTML = message;
-
-            element.parentNode.insertBefore(errorDiv, element.nextSibling);
-        }
-    }
-
-    function removeErrorMessage(element){
-        element.classList.remove("invalid");
-
-        var prossimoElemento = element.nextSibling;
-
-        if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-            prossimoElemento.parentNode.removeChild(prossimoElemento);
-        }
-    }
 
     function validateField(fieldDaValidare){
         var isCampoValid = true;
@@ -972,35 +955,6 @@ function sendEmailWithPDFOrdine(){
                 }
         } else{
             addErrorMessage(fieldElement, "Campo richiesto");
-        }
-
-        function addErrorMessage(element, message){
-
-            var prossimoElemento = element.nextSibling;
-
-            if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-                prossimoElemento.innerHTML = message;
-            } else{
-
-                element.classList.add("invalid");
-
-                var errorDiv = document.createElement("div");
-                errorDiv.classList.add("invalid-feedback");
-
-                errorDiv.innerHTML = message;
-
-                element.parentNode.insertBefore(errorDiv, element.nextSibling);
-            }
-        }
-
-        function removeErrorMessage(element){
-            element.classList.remove("invalid");
-
-            var prossimoElemento = element.nextSibling;
-
-            if(prossimoElemento.classList && prossimoElemento.classList.contains("invalid-feedback")){
-                prossimoElemento.parentNode.removeChild(prossimoElemento);
-            }
         }
 
     }
