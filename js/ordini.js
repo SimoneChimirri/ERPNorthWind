@@ -1162,3 +1162,87 @@ function isValidEmail(email){
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
+
+var tHeadOrdini = document.getElementById("tableOrdini").tHead.querySelectorAll("tr")[0];
+var lastSortedColumn = null;
+var sortDirection = 'asc';
+
+tHeadOrdini.addEventListener('click', handlerTableOrdiniHeaderClick);
+
+function handlerTableOrdiniHeaderClick(event){
+    event.preventDefault();
+    var target = event.target;
+
+    var fieldName = target.getAttribute("data-index");
+    
+    if(!fieldName){
+        return;
+    }
+
+    if(lastSortedColumn === fieldName){
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else{
+        sortDirection = 'asc';
+        lastSortedColumn = fieldName;
+    }
+
+    var headerFieldList = tHeadOrdini.getElementsByTagName("th");
+    var columnIndex = -1;
+
+    for(var i = 0; i < headerFieldList.length; i++){
+        if(headerFieldList[i].getAttribute("data-index") === fieldName){
+            columnIndex = i;
+            break;
+        }
+    }
+
+    if(columnIndex === -1){
+        return;
+    }
+
+    var tBody = document.getElementById("tableOrdini").tBodies[0];
+    var rows = document.getElementById("tableOrdini").tBodies[0].querySelectorAll("tr");
+    rows = Array.from(rows);
+
+    rows.sort(function(rowA, rowB){
+        var a = rowA.cells[columnIndex].innerText.trim();
+        var b = rowB.cells[columnIndex].innerText.trim();
+
+        if(!isNaN(a) && !isNaN(b)){
+            var numA = parseFloat(a);
+            var numB = parseFloat(b);
+            var comparison = numA - numB;
+        } else if(fieldName.toUpperCase() === "ORDER_DATE" || fieldName.toUpperCase() === "REQUIRED_DATE" || fieldName.toUpperCase() === "SHIPPED_DATE"){
+            day = a.split("-")[0];
+            month = a.split("-")[1];
+            year = "19" + a.split("-")[2];
+            var dateA = new Date(year, month - 1, day);
+            day = b.split("-")[0];
+            month = b.split("-")[1];
+            year = "19" + b.split("-")[2];
+            var dateB = new Date(year, month - 1, day);
+            console.log(dateA.getDate());
+            var comparison = dateA - dateB;
+        } else{
+            a = a.toLowerCase();
+            b = b.toLowerCase();
+            var comparison = a.localeCompare(b);
+        }
+
+        return sortDirection === 'asc' ? comparison : -comparison;
+    });
+
+    while(tBody.firstChild){
+        tBody.removeChild(tBody.firstChild);
+    }
+
+    rows.forEach(function(row){
+        tBody.appendChild(row);
+    });
+
+    headerFieldList.forEach(function(header){
+        header.classList.remove("sort-asc", "sort-desc");
+    });
+    
+    target.classList.add(sortDirection === 'asc' ? "sort-asc" : "sort-desc");
+}

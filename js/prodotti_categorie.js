@@ -419,6 +419,82 @@ function esportaProdottiExcel(){
     console.info("Esportazione prodotti in Excel avvenuta con successo");
 }
 
+tHeadProdotti = document.getElementById("tableProdotti").tHead.querySelectorAll("tr")[0];
+var lastSortedColumn = null;
+var sortDirection = 'asc';
+
+tHeadProdotti.addEventListener('click', handlerTableProdottiHeaderClick);
+
+function handlerTableProdottiHeaderClick(event){
+    event.preventDefault();
+    target = event.target;
+
+    var fieldName = target.getAttribute("data-index");
+    
+    if(!fieldName){
+        return;
+    }
+
+    if(lastSortedColumn === fieldName){
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else{
+        lastSortedColumn = fieldName;
+        sortDirection = 'asc';
+    }
+
+    var columnIndex = -1;
+    var headerFieldList = tHeadProdotti.getElementsByTagName("th");
+
+    for(var i=0; i < headerFieldList.length; i++){
+        if(headerFieldList[i].getAttribute("data-index") === fieldName){
+            columnIndex = i;
+            break;
+        }
+    }
+
+    if(columnIndex === -1){
+        return;
+    }
+
+    var tBody = document.getElementById("tableProdotti").tBodies[0];
+    var rows = tBody.querySelectorAll("tr");
+    rows = Array.from(rows);
+
+    rows.sort(function(rowA, rowB){
+        var a = rowA.cells[columnIndex].innerText.trim();
+        var b = rowB.cells[columnIndex].innerText.trim();
+        var comparison;
+
+        if(!isNaN(a) && !isNaN(b)){
+            var numA = parseFloat(a);
+            var numB = parseFloat(b);
+            comparison = numA - numB;
+        } else{
+            a = a.toLowerCase();
+            b = b.toLowerCase();
+            comparison = a.localeCompare(b);
+        }
+
+        return sortDirection === 'asc' ? comparison : -comparison;
+
+    });
+
+    while(tBody.firstChild){
+        tBody.removeChild(tBody.firstChild);
+    };
+
+    rows.forEach(function(row){
+        tBody.appendChild(row);
+    });
+
+    Array.from(headerFieldList).forEach(function(header){
+        header.classList.remove("sort-asc","sort-desc");
+    });
+
+    target.classList.add(sortDirection === 'asc' ? "sort-asc" : "sort-desc");
+
+}
+
 function validateFormCategorie(fieldDaValidare){
     var form = document.getElementById("formCategorie");
 
@@ -758,4 +834,80 @@ function esportaCategorieExcel(){
     var wb = XLSX.utils.table_to_book(table, {sheet: "Categorie"});
     XLSX.writeFile(wb, "categorie.xlsx");
     console.info("Esportazione categorie in Excel avvenuta con successo");
+}
+
+
+var tHeadCategorie = document.getElementById("tableCategorie").tHead.querySelectorAll("tr")[0];
+var sortDirection = 'asc';
+var lastSortedColumn = null;
+
+tHeadCategorie.addEventListener('click',handlerTableCategorieHeaderClick);
+
+function handlerTableCategorieHeaderClick(event){
+    event.preventDefault();
+    target = event.target;
+
+    var fieldName = target.getAttribute("data-index");
+
+    if(!fieldName){
+        return;
+    }
+
+    if(lastSortedColumn === fieldName){
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else{
+        sortDirection = 'asc';
+        lastSortedColumn = fieldName;
+    }
+
+    var columnIndex = -1;
+    var headerFieldList = tHeadCategorie.querySelectorAll("th");
+
+    for(var i=0; i < headerFieldList.length; i++){
+        if(headerFieldList[i].getAttribute("data-index") === fieldName){
+            columnIndex = i;
+            break;
+        }
+    }
+
+    if(columnIndex === -1){
+        return;
+    }
+
+    var tBody = document.getElementById("tableCategorie").tBodies[0];
+    var rows = tBody.querySelectorAll("tr");
+    rows = Array.from(rows);
+
+    rows.sort(function(rowA,rowB){
+        var a = rowA.cells[columnIndex].innerText.trim();
+        var b = rowB.cells[columnIndex].innerText.trim();
+        var comparison;
+
+        if(!isNaN(a) && !isNaN(b)){
+            var numA = parseFloat(a);
+            var numB = parseFloat(b);
+            comparison = numA-numB;
+        } else{
+            a = a.toLowerCase();
+            b = b.toLowerCase();
+            comparison = a.localeCompare(b);
+        }
+
+        return sortDirection === 'asc' ? comparison : -comparison;
+
+    });
+
+    while(tBody.firstChild){
+        tBody.removeChild(tBody.firstChild);
+    };
+
+    rows.forEach(function(row){
+        tBody.appendChild(row);
+    });
+
+    Array.from(headerFieldList).forEach(function(header){
+        header.classList.remove("sort-asc","sort-desc");
+    });
+
+    target.classList.add(sortDirection === 'asc' ? "sort-asc" : "sort-desc");
 }

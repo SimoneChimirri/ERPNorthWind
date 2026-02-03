@@ -422,3 +422,77 @@ function esportaClientiExcel(){
     XLSX.writeFile(wb, "clienti.xlsx");
     console.info("Esportazione clienti in Excel avvenuta con successo");
 }
+
+var tHeadClienti = document.getElementById("tableClienti").tHead.querySelectorAll("tr")[0];
+var lastSortedColumn = null;
+var sortDirection = 'asc';
+
+tHeadClienti.addEventListener('click', handlerTableClientiHeaderClick);
+
+function handlerTableClientiHeaderClick(event){
+
+    var target = event.target;
+
+    var fieldName = target.getAttribute("data-index");
+
+    if(!fieldName){
+        return;
+    }
+
+    if(lastSortedColumn === fieldName){
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else{
+        lastSortedColumn = fieldName;
+        sortDirection = 'asc';
+    }
+
+    var headerFieldList = tHeadClienti.getElementsByTagName("th");
+    var columnIndex = -1;
+
+    for(var i=0; i < headerFieldList.length; i++){
+        if(headerFieldList[i].getAttribute("data-index") === fieldName){
+            columnIndex = i;
+            break;
+        }
+    }
+
+    if(columnIndex === -1){
+        return;
+    }
+
+    var tBody = document.getElementById("tableClienti").tBodies[0];
+    var rows = tBody.querySelectorAll("tr");
+    rows = Array.from(rows);
+
+    rows.sort(function(rowA, rowB){
+        var a = rowA.cells[columnIndex].innerText.trim();
+        var b = rowB.cells[columnIndex].innerText.trim();
+        var comparison;
+
+        if(!isNaN(b) && !isNaN(a)){
+            var numA = parseFloat(a);
+            var numB = parseFloat(b);
+            comparison = numA - numB;
+        } else{
+            a = a.toLowerCase();
+            b = b.toLowerCase();
+            comparison = a.localeCompare(b);
+        }
+
+        return sortDirection === 'asc' ? comparison : -comparison;
+    });
+
+    while(tBody.firstChild){
+        tBody.removeChild(tBody.firstChild);
+    };
+
+    rows.forEach(function(row){
+        tBody.appendChild(row);
+    });
+
+    Array.from(headerFieldList).forEach(function(header){
+        header.classList.remove("sort-asc","sort-desc");
+    });
+
+    target.classList.add(sortDirection === 'asc' ? "sort-asc" : "sort-desc");
+}

@@ -510,3 +510,85 @@ function esportaDipendentiExcel(){
     XLSX.writeFile(wb, "dipendenti.xlsx");
     console.info("Esportazione dipendenti in Excel avvenuta con successo");
 }
+
+tHeadDipendenti = document.getElementById("tableDipendenti").tHead.querySelectorAll("tr")[0];
+var sortDirection = 'asc';
+var lastSortedColumn = null;
+
+tHeadDipendenti.addEventListener('click',handlerTableDipendentiHeaderClick);
+
+function handlerTableDipendentiHeaderClick(event){
+    event.preventDefault();
+    var target = event.target;
+
+    var fieldName = target.getAttribute("data-index");
+
+    if(!fieldName){
+        return;
+    }
+
+    if(lastSortedColumn === fieldName){
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else{
+        sortDirection = 'asc';
+        lastSortedColumn = fieldName;
+    }
+
+    var columnIndex = -1;
+    var headerFieldList = tHeadDipendenti.querySelectorAll("th");
+
+    for(var i=0; i < headerFieldList.length; i++){
+        if(headerFieldList[i].getAttribute("data-index") === fieldName){
+            columnIndex = i;
+            break;
+        }
+    }
+
+    var tBody = document.getElementById("tableDipendenti").tBodies[0];
+    var rows = tBody.querySelectorAll("tr");
+    rows = Array.from(rows);
+
+    rows.sort(function(rowA,rowB){
+        var a = rowA.cells[columnIndex].innerText.trim();
+        var b = rowB.cells[columnIndex].innerText.trim();
+        var comparison;
+
+        if(!isNaN(a) && !isNaN(b)){
+            var numA = parseFloat(a);
+            var numB = parseFloat(b);
+            comparison = a - b;
+        } else if(fieldName.toUpperCase()==="BIRTHDATE" || fieldName.toUpperCase() === "HIREDATE"){
+            day = a.split("-")[0];
+            month = a.split("-")[1];
+            year = "19" + a.split("-")[2];
+            dateA = new Date(year, month - 1, day);
+            day = b.split("-")[0];
+            month = b.split("-")[1];
+            year = "19" + b.split("-")[2];
+            dateB = new Date(year, month -1, day);
+            comparison = dateA - dateB;
+        } else{
+            a = a.toLowerCase();
+            b = b.toLowerCase();
+            comparison = a.localeCompare(b);
+        }
+
+        return sortDirection === 'asc' ? comparison : -comparison;
+
+    });
+
+    while(tBody.firstChild){
+        tBody.removeChild(tBody.firstChild);
+    };
+
+    rows.forEach(function(row){
+        tBody.appendChild(row);
+    });
+
+    Array.from(headerFieldList).forEach(function(header){
+        header.classList.remove("sort-asc", "sort-desc");
+    })
+
+    target.classList.add(sortDirection === 'asc' ? "sort-asc" : "sort-desc");
+
+}

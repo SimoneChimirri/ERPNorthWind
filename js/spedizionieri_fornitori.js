@@ -404,6 +404,82 @@ function esportaSpedizionieriExcel(){
     console.info("Esportazione spedizionieri in Excel avvenuta con successo");
 }
 
+tHeadSpedizionieri = document.getElementById("tableSpedizionieri").tHead.querySelectorAll("tr")[0];
+var lastSortedColumn = null;
+var sortDirection = 'asc';
+
+tHeadSpedizionieri.addEventListener('click', handlerTableSpedizionieriHeaderClick);
+
+function handlerTableSpedizionieriHeaderClick(event){
+    event.preventDefault();
+    target = event.target;
+
+    var fieldName = target.getAttribute("data-index");
+
+    if(!fieldName){
+        return;
+    }
+
+    if(lastSortedColumn === fieldName){
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else{
+        sortDirection = 'asc';
+        lastSortedColumn = fieldName;
+    }
+
+    var headerFieldList = tHeadSpedizionieri.querySelectorAll("th");
+    var columnIndex = -1;
+
+    for(var i=0; i < headerFieldList.length; i++){
+        if(headerFieldList[i].getAttribute("data-index") === fieldName){
+            columnIndex = i;
+            break;
+        }
+    }
+
+    if(columnIndex === -1){
+        return;
+    }
+
+    var tBody = document.getElementById("tableSpedizionieri").tBodies[0];
+    var rows = tBody.querySelectorAll("tr");
+    rows = Array.from(rows);
+
+    rows.sort(function(rowA,rowB){
+        var a = rowA.cells[columnIndex].innerText.trim();
+        var b = rowB.cells[columnIndex].innerText.trim();
+        var comparison;
+
+        if(!isNaN(a) && !isNaN(b)){
+            var numA = parseFloat(a);
+            var numB = parseFloat(b);
+            comparison = numA - numB;
+        } else{
+            a = a.toLowerCase();
+            b = b.toLowerCase();
+            comparison = a.localeCompare(b);
+        }
+
+        return sortDirection === 'asc' ? comparison : -comparison;
+
+    })
+
+    while(tBody.firstChild){
+        tBody.removeChild(tBody.firstChild);
+    };
+
+    rows.forEach(function(row){
+        tBody.appendChild(row);
+    });
+
+    Array.from(headerFieldList).forEach(function(header){
+        header.classList.remove("sort-asc","sort-desc");
+    });
+
+    target.classList.add(sortDirection === 'asc' ? "sort-asc" : "sort-desc");
+
+}
+
 function validateFormFornitori(fieldDaValidare){
     var form = document.getElementById("formFornitori");
 
@@ -775,4 +851,79 @@ function esportaFornitoriExcel(){
     var wb = XLSX.utils.table_to_book(table, {sheet: "Fornitori"});
     XLSX.writeFile(wb, "fornitori.xlsx");
     console.info("Esportazione fornitori in Excel avvenuta con successo");
+}
+
+tHeadFornitori = document.getElementById("tableFornitori").tHead.querySelectorAll("tr")[0];
+var lastSortedColumn = null;
+var sortDirection = 'asc';
+
+tHeadFornitori.addEventListener('click', handlerTableFornitoriHeaderClick);
+function handlerTableFornitoriHeaderClick(event){
+    event.preventDefault();
+    target = event.target;
+
+    var fieldName = target.getAttribute("data-index");
+
+    if(!fieldName){
+        return;
+    }
+
+    if(lastSortedColumn === fieldName){
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else{
+        sortDirection = 'asc';
+        lastSortedColumn = fieldName;
+    }
+
+    var headerFieldList = tHeadFornitori.querySelectorAll("th");
+    var columnIndex = -1;
+
+    for(var i=0; i < headerFieldList.length; i++){
+        if(headerFieldList[i].getAttribute("data-index") === fieldName){
+            columnIndex = i;
+            break;
+        }
+    }
+
+    if(columnIndex === -1){
+        return;
+    }
+
+    var tBody = document.getElementById("tableFornitori").tBodies[0];
+    var rows = tBody.querySelectorAll("tr");
+    rows = Array.from(rows);
+
+    rows.sort(function(rowA,rowB){
+        var a = rowA.cells[columnIndex].innerText.trim();
+        var b = rowB.cells[columnIndex].innerText.trim();
+        var comparison;
+
+        if(!isNaN(a) && !isNaN(b)){
+            var numA = parseFloat(a);
+            var numB = parseFloat(b);
+            comparison = numA - numB;
+        } else{
+            a = a.toLowerCase();
+            b = b.toLowerCase();
+            comparison = a.localeCompare(b);
+        }
+
+        return sortDirection === 'asc' ? comparison : -comparison;
+
+    })
+
+    while(tBody.firstChild){
+        tBody.removeChild(tBody.firstChild);
+    };
+
+    rows.forEach(function(row){
+        tBody.appendChild(row);
+    });
+
+    Array.from(headerFieldList).forEach(function(header){
+        header.classList.remove("sort-asc","sort-desc");
+    });
+
+    target.classList.add(sortDirection === 'asc' ? "sort-asc" : "sort-desc");
+
 }
