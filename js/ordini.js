@@ -571,6 +571,13 @@ function eliminaOrdine(){
     }, 300);
 }
 
+function esportaOrdiniExcel(){
+    var table = document.getElementById("tableOrdini");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Ordini"});
+    XLSX.writeFile(wb, "ordini.xlsx");
+    console.info("Esportazione ordini in Excel avvenuta con successo");
+}
+
 function validateFormDettaglioOrdine(fieldDaValidare){
     var form = document.getElementById("formDettaglioOrdine");
 

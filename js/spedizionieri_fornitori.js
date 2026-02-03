@@ -384,6 +384,13 @@ function eliminaSpedizioniere(){
 
 }
 
+function esportaSpedizionieriExcel(){
+    var table = document.getElementById("tableSpedizionieri");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Spedizionieri"});
+    XLSX.writeFile(wb, "spedizionieri.xlsx");
+    console.info("Esportazione spedizionieri in Excel avvenuta con successo");
+}
+
 function validateFormFornitori(fieldDaValidare){
     var form = document.getElementById("formFornitori");
 
@@ -765,4 +772,11 @@ function eliminaFornitore(){
 
         targetIcon.dispatchEvent(clickEvent);
     }
+}
+
+function esportaFornitoriExcel(){
+    var table = document.getElementById("tableFornitori");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Fornitori"});
+    XLSX.writeFile(wb, "fornitori.xlsx");
+    console.info("Esportazione fornitori in Excel avvenuta con successo");
 }

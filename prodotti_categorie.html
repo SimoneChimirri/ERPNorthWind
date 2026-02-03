@@ -9,6 +9,7 @@
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+    <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script type="text/javascript" src="js/auth.js"></script>
     <script>
         function toggleMenubar() {
@@ -62,7 +63,7 @@
                             <input type="button" value="Elimina prodotto" class="btn" onclick="eliminaProdotto()">
                         </div>
                         <div>
-                            <input type="button" value="Esporta prodotti in formato Excel" class="btn" onclick="">
+                            <input type="button" value="Esporta prodotti in formato Excel" class="btn" onclick="esportaProdottiExcel()">
                         </div>
                     </div>
                     <div id="toolbar">
@@ -82,7 +83,7 @@
                             <input type="button" value="Elimina categoria" class="btn" onclick="eliminaCategoria()">
                         </div>
                         <div>
-                            <input type="button" value="Esporta categorie in formato Excel" class="btn" onclick="">
+                            <input type="button" value="Esporta categorie in formato Excel" class="btn" onclick="esportaCategorieExcel()">
                         </div>
                     </div>
                 </div>

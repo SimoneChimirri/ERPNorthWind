@@ -490,3 +490,10 @@ function eliminaDipendente(){
             targetIcon.dispatchEvent(clickEvent);
     }
 }
+
+function esportaDipendentiExcel(){
+    var table = document.getElementById("tableDipendenti");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Dipendenti"});
+    XLSX.writeFile(wb, "dipendenti.xlsx");
+    console.info("Esportazione dipendenti in Excel avvenuta con successo");
+}

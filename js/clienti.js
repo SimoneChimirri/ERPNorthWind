@@ -403,3 +403,10 @@ function eliminaCliente(){
 
     }
 }
+
+function esportaClientiExcel(){
+    var table = document.getElementById("tableClienti");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Clienti"});
+    XLSX.writeFile(wb, "clienti.xlsx");
+    console.info("Esportazione clienti in Excel avvenuta con successo");
+}

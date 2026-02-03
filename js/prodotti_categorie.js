@@ -399,6 +399,13 @@ function eliminaProdotto(){
     }
 }
 
+function esportaProdottiExcel(){
+    var table = document.getElementById("tableProdotti");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Prodotti"});
+    XLSX.writeFile(wb, "prodotti.xlsx");
+    console.info("Esportazione prodotti in Excel avvenuta con successo");
+}
+
 function validateFormCategorie(fieldDaValidare){
     var form = document.getElementById("formCategorie");
 
@@ -748,4 +755,11 @@ function eliminaCategoria(){
 
         targetIcon.dispatchEvent(clickEvent);
     }
+}
+
+function esportaCategorieExcel(){
+    var table = document.getElementById("tableCategorie");
+    var wb = XLSX.utils.table_to_book(table, {sheet: "Categorie"});
+    XLSX.writeFile(wb, "categorie.xlsx");
+    console.info("Esportazione categorie in Excel avvenuta con successo");
 }
