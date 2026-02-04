@@ -158,16 +158,19 @@
                     <input type="text" name="ORDER_ID" id="ORDER_ID" readonly/>
 
                     <label for="PRODUCT_ID">Product ID:</label>
-                    <input type="text" name="PRODUCT_ID" id="PRODUCT_ID">
+                    <input type="number" name="PRODUCT_ID" id="PRODUCT_ID">
+
+                    <label for="PRODUCT_NAME">Product Name:</label>
+                    <input type="text" name="PRODUCT_NAME" id="PRODUCT_NAME" readonly/>
                     
                     <label for="QUANTITY">Quantity:</label>
                     <input type="number" name="QUANTITY" id="QUANTITY">
                     
                     <label for="UNIT_PRICE">Unit Price:</label>
-                    <input type="text" name="UNIT_PRICE" id="UNIT_PRICE">
+                    <input type="number" step="0.01" name="UNIT_PRICE" id="UNIT_PRICE">
                     
                     <label for="DISCOUNT">Discount:</label>
-                    <input type="text" name="DISCOUNT" id="DISCOUNT">
+                    <input type="number" step="0.01" name="DISCOUNT" id="DISCOUNT">
 
                     <input type="submit" value="Salva" class="btn">
                     <input type="reset" value="Cancella" class="btn">
@@ -176,6 +179,19 @@
             <div id="main">
                 <div id="mainHeader">
                     <h1>Dettaglio ordine</h1>
+                    <div id="toolbar">
+                        <div>
+                            <input type="text" id="updateFieldDettagliOrdini">
+                            <input type="button" value="Aggiorna dettaglio ordine" class="btn" onclick="selezionaDettaglioOrdine()">
+                        </div>
+                        <div>
+                            <input type="button" value="Crea dettaglio ordine" class="btn" onclick="document.getElementById('sidebar').classList.remove('collapsed');">
+                        </div>
+                        <div>
+                            <input type="text" id="deleteFieldDettagliOrdini">
+                            <input type="button" value="Elimina dettaglio ordine" class="btn" onclick="eliminaDettaglioOrdine()">
+                        </div>
+                    </div>
                 </div>
                 <table id="tableDettaglioOrdine">
                     <thead>
@@ -191,7 +207,7 @@
                     <tbody id="tableDettaglioOrdineData">
                     </tbody>
                 </table>
-        </div>
+            </div>
         </div>
         <div id="bottom">NorthWind</div>
     </div>

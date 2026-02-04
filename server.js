@@ -76,11 +76,28 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined' && !global.w
         else if (entity === 'categorie') idField = 'CATEGORY_ID';
         else if (entity === 'fornitori') idField = 'SUPPLIER_ID';
         else if (entity === 'spedizionieri') idField = 'SHIPPER_ID';
-        else if (entity === 'dettagli_ordini') idField = 'ORDER_DETAIL_ID';
 
-        const id = payload[idField] ?? Date.now().toString();
-        const idx = data.findIndex((item) => String(item[idField]) === String(id));
-        const newItem = { ...payload, [idField]: parseInt(id) };
+        let idx;
+        let newItem;
+
+        if (entity === 'dettagli_ordini') {
+          const orderId = payload.ORDER_ID;
+          const productId = payload.PRODUCT_ID;
+
+          idx = data.findIndex(
+            (item) => String(item.ORDER_ID) === String(orderId) && String(item.PRODUCT_ID) === String(productId)
+          );
+
+          newItem = {
+            ...payload,
+            ORDER_ID: orderId !== undefined ? parseInt(orderId) : orderId,
+            PRODUCT_ID: productId !== undefined ? parseInt(productId) : productId
+          };
+        } else {
+          const id = payload[idField] ?? Date.now().toString();
+          idx = data.findIndex((item) => String(item[idField]) === String(id));
+          newItem = { ...payload, [idField]: parseInt(id) };
+        }
 
         if (idx >= 0) {
           data[idx] = newItem;

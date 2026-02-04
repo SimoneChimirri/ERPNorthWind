@@ -682,8 +682,15 @@ function handlerFormDettaglioOrdineSubmitButtonClick(event){
 
         for(var i=0; i < formDettaglioOrdineFields.length; i++){
             var fieldIterato = formDettaglioOrdineFields[i];
-            valori[fieldIterato.name] = fieldIterato.value;
+            if(fieldIterato.type === "number"){
+                valori[fieldIterato.name] = parseFloat(fieldIterato.value);
+            }else if(fieldIterato.value && fieldIterato.value !== ""){
+                valori[fieldIterato.name] = fieldIterato.value;
+            }
         }
+        valori["ORDER_ID"] = document.getElementById("formDettaglioOrdine").querySelectorAll('input')[0].innerText;
+        console.log(valori["ORDER_ID"]);
+        valori["PRODUCT_NAME"] = risolviProdotti(parseInt(valori["PRODUCT_ID"])).name;
 
         function aggiungiOAggiornaDettaglioOrdineSuFile(valori,callback){
             var httpReq = new XMLHttpRequest();
@@ -708,12 +715,12 @@ function handlerFormDettaglioOrdineSubmitButtonClick(event){
 
         if(valori.PRODUCT_ID && valori.PRODUCT_ID !== "" && selectedRow){
             aggiungiOAggiornaDettaglioOrdineSuFile(valori,function(dettaglioOrdineAggiornato){
-                aggiornaRigaTableOrdini(dettaglioOrdineAggiornato);
+                aggiornaRigaTableDettaglioOrdine(dettaglioOrdineAggiornato);
                 document.getElementById("formDettaglioOrdine").reset();
             })
         } else{
             aggiungiOAggiornaDettaglioOrdineSuFile(valori, function(dettaglioOrdineAggiunto){
-                aggiungiRigaTableOrdini(dettaglioOrdineAggiunto);
+                aggiungiRigaTableDettaglioOrdine(dettaglioOrdineAggiunto);
                 document.getElementById("formDettaglioOrdine").reset();
             })
         }
@@ -753,18 +760,11 @@ function aggiungiRigaTableDettaglioOrdine(valori){
         var td = document.createElement("td");
 
         if(fieldName){
-            if(valori[fieldName]){
-                if(fieldName === "PRODUCT_NAME"){
-                    var productName = valori["PRODUCT_NAME"];
-                    for(var k=0; k < prodottiData.length; k++){
-                        if(prodottiData[k].PRODUCT_NAME === productName){
-                            td.innerHTML = prodottiData[k].PRODUCT_ID;
-                            break;
-                        }
-                    }
-                } else{
-                    td.innerHTML = valori[fieldName];
-                }
+            if(fieldName === "PRODUCT_NAME"){
+                var productName = risolviProdotti(valori["PRODUCT_ID"]);
+                td.innerHTML = productName.name;
+            } else if(valori[fieldName]){
+                td.innerHTML = valori[fieldName];
             }
         } else{
             var iEl = document.createElement("i");
@@ -789,15 +789,12 @@ function aggiornaRigaTableDettaglioOrdine(valori){
 
     for(var i=0; i < headerFieldList.length; i++){
         var fieldName = headerFieldList[i].getAttribute("data-index");
-        prodottiData = getProdotti();
 
         if(fieldName && fieldName !== ""){
             if(valori[fieldName]){
                 if(fieldName === "PRODUCT_NAME"){
-                    var productName = valori["PRODUCT_NAME"];
-                    if(productName === prodottiData[i].PRODUCT_NAME){
-                        tDataList[i].innerHTML = prodottiData[i].PRODUCT_ID;
-                    }
+                    var productName = risolviProdotti(valori["PRODUCT_ID"]);
+                    tDataList[i].innerHTML = productName.name;
                 } else{
                     tDataList[i].innerHTML = valori[fieldName];
                 }
@@ -817,7 +814,7 @@ function handlerTableDettaglioOrdineRowClick(event){
     var sidebar = document.getElementById("sidebar");
     sidebar.classList.remove("collapsed");
 
-    if(target.querySelectorAll("i").length > 0){
+    if(target.tagName.toUpperCase() === "TD" && target.querySelectorAll("i").length > 0){
         return;
     }
 
@@ -855,8 +852,6 @@ function handlerTableDettaglioOrdineRowClick(event){
             }
         }
     }
-
-    caricaDettaglioOrdine(form["ORDER_ID"].value);
 }
 
 document.getElementById("tableDettaglioOrdine").tBodies[0].addEventListener("dblclick", handlerTableDettaglioOrdineRowClick);
@@ -897,13 +892,11 @@ function aggiungiRigaTableDettaglioOrdine(valori){
         var td = document.createElement("td");
         if(fieldName){
             if(valori[fieldName]){
-                if(fieldName === "PRODUCT_NAME"){
-                    var nomeProdotto = risolviProdotti(valori["PRODUCT_ID"]);
-                    td.innerHTML = nomeProdotto.name;
-                } else{
-                    td.innerHTML = valori[fieldName];
-                }
-            }   
+                td.innerHTML = valori[fieldName];
+            }else if(fieldName === "PRODUCT_NAME"){
+                var nomeProdotto = risolviProdotti(valori["PRODUCT_ID"]);
+                td.innerHTML = nomeProdotto.name;
+            } 
         } else{
             var iEl = document.createElement("i");
             iEl.classList.add("fa");
@@ -926,6 +919,9 @@ function caricaDettaglioOrdine(orderId){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var dettaglioOrdine = JSON.parse(httpReq.responseText);
+                var tableDettaglioOrdine = document.getElementById("tableDettaglioOrdine");
+                tableDettaglioOrdine.tBodies[0].innerHTML = "";
+                
                 for(var i=dettaglioOrdine.length; i > 0; i--){
                     if(dettaglioOrdine[i-1].ORDER_ID != orderId){
                         continue;
@@ -942,6 +938,80 @@ function caricaDettaglioOrdine(orderId){
 
     httpReq.open("GET","json/dettagli_ordini.json");
     httpReq.send();
+}
+
+function selezionaDettaglioOrdine(){
+
+    var valoreDaRicercare = document.getElementById("updateFieldDettagliOrdini").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare===""){
+        addErrorMessage(document.getElementById("updateFieldDettagliOrdini"), "Campo richiesto");
+        return;
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("updateFieldDettagliOrdini"), "Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("updateFieldDettagliOrdini"));
+    }
+
+    var rows = document.getElementById("tableDettaglioOrdine").tBodies[0].querySelectorAll("tr");
+    var targetRow = null;
+
+    for(var i=0; i < rows.length; i++){
+        if(rows[i].firstElementChild.innerText === valoreDaRicercare){
+            targetRow = rows[i];
+            break;
+        }
+    }
+
+    if(targetRow){
+        const dblClickEvent = new MouseEvent('dblclick', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetRow.dispatchEvent(dblClickEvent);
+
+    }
+
+}
+
+function eliminaDettaglioOrdine(){
+
+    var valoreDaRicercare = document.getElementById("deleteFieldDettagliOrdini").value;
+
+    if(!valoreDaRicercare || valoreDaRicercare===""){
+        addErrorMessage(document.getElementById("deleteFieldDettagliOrdini"), "Campo richiesto");
+        return;
+    } else if(!isInt(valoreDaRicercare) || valoreDaRicercare <= 0){
+        addErrorMessage(document.getElementById("deleteFieldDettagliOrdini"), "Deve essere un numero intero positivo");
+        return;
+    } else{
+        removeErrorMessage(document.getElementById("deleteFieldDettagliOrdini"));
+    }
+
+    var rows = document.getElementById("tableDettaglioOrdine").tBodies[0].querySelectorAll("tr");
+    var targetIcon = null;
+
+    for(var i=0; i < rows.length; i++){
+        if(rows[i].firstElementChild.innerText === valoreDaRicercare){
+            targetIcon = rows[i].querySelectorAll("i")[0];
+            break;
+        }
+    }
+
+    if(targetIcon){
+        const clickEvent = new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        });
+
+        targetIcon.dispatchEvent(clickEvent);
+
+    }
+
 }
 
 function sendEmailWithPDFOrdine(){
