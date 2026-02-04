@@ -52,6 +52,14 @@ body{
     font-size: 14px;
 }
 
+#main #tableDipendenti{
+    width: 1200px !important;
+    max-width: 1200px !important;
+    table-layout: fixed !important;
+    display: block !important;
+    overflow: auto;
+}
+
 #main h2{
     text-align: center;
 }
