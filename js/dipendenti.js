@@ -30,7 +30,7 @@ function risolviManager(managerId){
 function formatDate(d){
     function pad(s){ return (s < 10) ? '0' + s : s;}
 
-    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join("-");
+    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join("-").replace("19","");
 }
 
 function isInt(value){
@@ -69,6 +69,9 @@ function removeErrorMessage(element){
 
     var prossimoElemento = element.nextSibling;
 
+    if(!prossimoElemento.classList || !prossimoElemento.classList.contains("invalid-feedback")){
+        return;
+    }
     prossimoElemento.classList.remove("invalid-feedback");
     element.parentNode.removeChild(prossimoElemento);
 
@@ -79,6 +82,9 @@ function validateFormDipendenti(fieldDaValidare){
     var form = document.getElementById("formDipendenti");
 
     function validateField(fieldDaValidare){
+        if(!fieldDaValidare){
+            return true;
+        }
         var isCampoValid = true;
         var fieldElement = form[fieldDaValidare];
         var fieldValue = fieldElement.value;
@@ -97,7 +103,7 @@ function validateFormDipendenti(fieldDaValidare){
                     removeErrorMessage(fieldElement);
                 }
                 break;
-            case "REPORTS_TO":
+            case "MANAGER_ID":
                 if(fieldValue || fieldValue !== ""){
                     if(isInt(fieldValue)){
                         removeErrorMessage(fieldElement);
@@ -147,7 +153,13 @@ function handlerFormDipendentiSubmitButtonClick(event){
                 var dateValue = fieldIterato.valueAsDate;
 
                 valori[fieldIterato.name] = formatDate(dateValue);
-            } else{
+            }else if(fieldIterato.name === "MANAGER_ID"){
+                var managerNames = risolviManager(parseInt(fieldIterato.value));
+                valori["MANAGER_FIRSTNAME"] = managerNames.first;
+                valori["MANAGER_LASTNAME"] = managerNames.last;
+            } else if(fieldIterato.name === "EMPLOYEE_ID"){
+                valori[fieldIterato.name] = parseFloat(fieldIterato.value);
+            }else if(fieldIterato.value && fieldIterato.value !== ""){
                 valori[fieldIterato.name] = fieldIterato.value;
             }
         }
@@ -190,7 +202,7 @@ function handlerFormDipendentiSubmitButtonClick(event){
     sidebar.classList.add("collapsed");
 }
 
-var formDipendentiFields = document.getElementById("formDipendenti").querySelectorAll('input:not(.btn), select');
+var formDipendentiFields = document.getElementById("formDipendenti").querySelectorAll('input:not(.btn), select, textarea');
 
 var submitButton = document.getElementById("formDipendenti").querySelectorAll('input[type="submit"]')[0];
 
@@ -451,6 +463,7 @@ function selezionaDipendente(){
     }
 
     var rows = document.getElementById("tableDipendenti").tBodies[0].querySelectorAll("tr");
+    var targetRow = null;
  
     for(var i=0; i < rows.length; i++){
         if(rows[i].firstElementChild.innerText === valoreDaRicercare){
