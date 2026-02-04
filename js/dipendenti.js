@@ -82,9 +82,7 @@ function validateFormDipendenti(fieldDaValidare){
     var form = document.getElementById("formDipendenti");
 
     function validateField(fieldDaValidare){
-        if(!fieldDaValidare){
-            return true;
-        }
+
         var isCampoValid = true;
         var fieldElement = form[fieldDaValidare];
         var fieldValue = fieldElement.value;
@@ -127,7 +125,7 @@ function validateFormDipendenti(fieldDaValidare){
         validateField(fieldDaValidare);
     } else{
         for(var i=0; i < formDipendentiFields.length; i++){
-            var isCampoValid = validateField(fieldDaValidare);
+            var isCampoValid = validateField(formDipendentiFields[i].name);
             if(!isCampoValid){
                 isValid = false;
             }
@@ -150,6 +148,9 @@ function handlerFormDipendentiSubmitButtonClick(event){
             if(fieldIterato.tagName.toUpperCase() === 'SELECT'){
                 valori[fieldIterato.name] = fieldIterato.options[fieldIterato.selectedIndex].innerText;
             } else if(fieldIterato.type === "date"){
+                if(!fieldIterato.value || fieldIterato.value === ""){
+                    continue;
+                }
                 var dateValue = fieldIterato.valueAsDate;
 
                 valori[fieldIterato.name] = formatDate(dateValue);
@@ -157,9 +158,7 @@ function handlerFormDipendentiSubmitButtonClick(event){
                 var managerNames = risolviManager(parseInt(fieldIterato.value));
                 valori["MANAGER_FIRSTNAME"] = managerNames.first;
                 valori["MANAGER_LASTNAME"] = managerNames.last;
-            } else if(fieldIterato.name === "EMPLOYEE_ID"){
-                valori[fieldIterato.name] = parseFloat(fieldIterato.value);
-            }else if(fieldIterato.value && fieldIterato.value !== ""){
+            } else if(fieldIterato.value && fieldIterato.value !== ""){
                 valori[fieldIterato.name] = fieldIterato.value;
             }
         }

@@ -80,7 +80,7 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined' && !global.w
 
         const id = payload[idField] ?? Date.now().toString();
         const idx = data.findIndex((item) => String(item[idField]) === String(id));
-        const newItem = { ...payload, [idField]: id };
+        const newItem = { ...payload, [idField]: parseInt(id) };
 
         if (idx >= 0) {
           data[idx] = newItem;

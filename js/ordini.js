@@ -215,6 +215,9 @@ function handlerFormOrdiniSubmitButtonClick(event){
         for(var i=0; i < formOrdiniFields.length; i++){
             var fieldIterato = formOrdiniFields[i];
             if(fieldIterato.type === "date"){
+                if(!fieldIterato.value || fieldIterato.value === ""){
+                    continue;
+                }
                 var dateValue = fieldIterato.valueAsDate;
 
                 valori[fieldIterato.name] = formatDate(dateValue);
@@ -222,7 +225,7 @@ function handlerFormOrdiniSubmitButtonClick(event){
                 var employeeNames = risolviDipendenti(parseInt(fieldIterato.value));
                 valori["EMPLOYEE_FIRSTNAME"] = employeeNames.first;
                 valori["EMPLOYEE_LASTNAME"] = employeeNames.last;
-            } else if(fieldIterato.type === "number" || fieldIterato.name === "ORDER_ID"){
+            } else if(fieldIterato.type === "number"){
                 valori[fieldIterato.name] = parseFloat(fieldIterato.value);
             }else if(fieldIterato.value && fieldIterato.value !== ""){
                 valori[fieldIterato.name] = fieldIterato.value;

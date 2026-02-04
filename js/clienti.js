@@ -106,8 +106,6 @@ function handlerFormClientiSubmitButtonClick(event){
 
             if(fieldIterato.tagName.toUpperCase() == "SELECT"){
                 valori[fieldIterato.name] = fieldIterato.options[fieldIterato.selectedIndex].innerText;
-            } else if(fieldIterato.name === "CUSTOMER_ID"){
-                 valori[fieldIterato.name] = parseFloat(fieldIterato.value);
             } else if(fieldIterato.value !== null && fieldIterato.value !== ""){
                 valori[fieldIterato.name] = fieldIterato.value;
             }

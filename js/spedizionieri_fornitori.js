@@ -99,7 +99,9 @@ function handlerFormSpedizionieriSubmitButtonClick(event){
 
         for(var i=0; i < formSpedizionieriFields.length; i++){
             var fieldIterato = formSpedizionieriFields[i];
-            valori[fieldIterato.name] = fieldIterato.value;
+            if(fieldIterato.value && fieldIterato.value !== ""){
+                valori[fieldIterato.name] = fieldIterato.value;
+            }
         }
 
         function aggiungiOAggiornaSpedizioniereSuFile(valori,callback){
@@ -544,7 +546,9 @@ function handlerFormFornitoriSubmitButtonClick(event){
             var fieldIterato = formFornitoriFields[i];
             if(fieldIterato.tagName.toUpperCase() == "SELECT"){
                 valori[fieldIterato.name] = fieldIterato.options[fieldIterato.selectedIndex].innerText;
-            }else{
+            }else if(!fieldIterato.value && fieldIterato.value === ""){
+                continue;
+            } else{
                 valori[fieldIterato.name] = fieldIterato.value;
             }
         }

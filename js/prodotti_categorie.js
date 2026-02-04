@@ -109,9 +109,12 @@ function handlerFormProdottiSubmitButtonClick(event){
 
         for(var i=0; i < formProdottiFields.length; i++){
             var fieldIterato = formProdottiFields[i];
-            if(fieldIterato.tagName.toUpperCase() == "CHECKBOX"){
+            if(fieldIterato.type === "checkbox"){
+                console.log("Checkbox trovato: "+fieldIterato.name+" con valore: "+fieldIterato.checked);
                 valori[fieldIterato.name] = fieldIterato.checked === true ? "Y" : "N";
-            } else{
+            } else if(fieldIterato.type === "number"){
+                valori[fieldIterato.name] = parseFloat(fieldIterato.value);
+            }else if(fieldIterato.value && fieldIterato.value !== ""){
                 valori[fieldIterato.name] = fieldIterato.value;
             }
         }
@@ -540,6 +543,9 @@ function handlerFormCategorieSubmitButtonClick(event){
 
         for(var i=0; i < formCategorieFields.length; i++){
             var fieldIterato = formCategorieFields[i];
+            if(!fieldIterato.value || fieldIterato.value === ""){
+                continue;
+            }
             valori[fieldIterato.name] = fieldIterato.value;
         }
 
