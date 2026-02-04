@@ -85,7 +85,7 @@ function risolviDipendenti(EmployeeId){
 function formatDate(d){
     function pad(s){ return (s < 10) ? '0' + s : s;}
 
-    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join("-");
+    return [pad(d.getDate()), pad(d.getMonth()+1), d.getFullYear()].join("-").replace("19","");
 }
 
 function isInt(value){
@@ -166,23 +166,6 @@ function validateFormOrdini(fieldDaValidare){
                     removeErrorMessage(fieldElement);
                 }
                 break;
-            case "SHIP_POSTAL_CODE":
-                if(fieldValue && fieldValue !== ""){
-                    if(isInt(fieldValue)){
-                        if(fieldValue > 0){
-                            removeErrorMessage(fieldElement);
-                        } else{
-                            addErrorMessage(fieldElement,"Deve essere un numero positivo");
-                            isCampoValid = false;
-                        }
-                    } else{
-                        addErrorMessage(fieldElement, "Deve essere un numero valido");
-                        isCampoValid = false;
-                    }
-                } else{
-                    removeErrorMessage(fieldElement);
-                }
-                break;
             case "EMPLOYEE_ID":
                 if(fieldValue && fieldValue !== ""){
                 if(isInt(fieldValue)){
@@ -235,7 +218,13 @@ function handlerFormOrdiniSubmitButtonClick(event){
                 var dateValue = fieldIterato.valueAsDate;
 
                 valori[fieldIterato.name] = formatDate(dateValue);
-            } else{
+            }else if(fieldIterato.name === "EMPLOYEE_ID"){
+                var employeeNames = risolviDipendenti(parseInt(fieldIterato.value));
+                valori["EMPLOYEE_FIRSTNAME"] = employeeNames.first;
+                valori["EMPLOYEE_LASTNAME"] = employeeNames.last;
+            } else if(fieldIterato.type === "number" || fieldIterato.name === "ORDER_ID"){
+                valori[fieldIterato.name] = parseFloat(fieldIterato.value);
+            }else if(fieldIterato.value && fieldIterato.value !== ""){
                 valori[fieldIterato.name] = fieldIterato.value;
             }
         }
