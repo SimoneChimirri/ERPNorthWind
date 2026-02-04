@@ -166,6 +166,23 @@ function validateFormOrdini(fieldDaValidare){
                     removeErrorMessage(fieldElement);
                 }
                 break;
+            case "SHIP_POSTAL_CODE":
+                if(fieldValue && fieldValue !== ""){
+                    if(isInt(fieldValue)){
+                        if(fieldValue > 0){
+                            removeErrorMessage(fieldElement);
+                        } else{
+                            addErrorMessage(fieldElement,"Deve essere un numero positivo");
+                            isCampoValid = false;
+                        }
+                    } else{
+                        addErrorMessage(fieldElement, "Deve essere un numero valido");
+                        isCampoValid = false;
+                    }
+                } else{
+                    removeErrorMessage(fieldElement);
+                }
+                break;
             case "EMPLOYEE_ID":
                 if(fieldValue && fieldValue !== ""){
                 if(isInt(fieldValue)){
@@ -407,6 +424,12 @@ function handlerTableOrdiniRowClick(event){
                 }
                 fieldName = "EMPLOYEE_ID";
                 formField = form[fieldName];
+            } else if(fieldName === "ORDER_DATE" || fieldName === "REQUIRED_DATE" || fieldName === "SHIPPED_DATE"){
+                if(valore !== ""){
+                    var splittedStringDate = valore.split("-");
+
+                    valore = "19" + splittedStringDate[2] + "-" + splittedStringDate[1] + "-" + splittedStringDate[0];
+                }
             }
 
             formField.value = valore;

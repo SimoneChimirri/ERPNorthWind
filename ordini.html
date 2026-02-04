@@ -55,7 +55,7 @@
                         </div>
                         <div>
                             <input type="text" id="updateFieldOrdini">
-                            <input type="button" value="Aggiorna ordine" class="btn" onclick="selezionaOrdine()">
+                            <input type="button" value="Aggiorna ordine" class="btn" onclick="selezionaOrdine(); location.href='#form-container'">
                         </div>
                         <div>
                             <input type="button" value="Crea ordine" class="btn" onclick="location.href='#form-container'">
@@ -114,19 +114,19 @@
                 <input type="number" name="EMPLOYEE_ID" id="EMPLOYEE_ID">
                 
                 <label>Order Date:</label>
-                <input type="text" name="ORDER_DATE" id="ORDER_DATE">
+                <input type="date" name="ORDER_DATE" id="ORDER_DATE">
                 
                 <label>Required Date:</label>
-                <input type="text" name="REQUIRED_DATE" id="REQUIRED_DATE">
+                <input type="date" name="REQUIRED_DATE" id="REQUIRED_DATE">
                 
                 <label>Shipped Date:</label>
-                <input type="text" name="SHIPPED_DATE" id="SHIPPED_DATE">
+                <input type="date" name="SHIPPED_DATE" id="SHIPPED_DATE">
                 
                 <label>Shipper:</label>
                 <input type="text" name="SHIPPER_NAME" id="SHIPPER_NAME">
                 
                 <label>Freight:</label>
-                <input type="text" name="FREIGHT" id="FREIGHT">
+                <input type="number" step="0.01" name="FREIGHT" id="FREIGHT">
                 
                 <label>Ship Name:</label>
                 <input type="text" name="SHIP_NAME" id="SHIP_NAME">
