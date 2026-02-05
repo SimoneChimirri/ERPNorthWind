@@ -187,6 +187,7 @@ function aggiungiRigaTableSpedizionieri(valori){
     }
 
     tableSpedizionieri.tBodies[0].insertBefore(tr, tableSpedizionieri.tBodies[0].firstElementChild);
+    hideExtraRows("tableSpedizionieri");
 }
 
 function aggiornaRigaTableSpedizionieri(valori){
@@ -207,6 +208,7 @@ function aggiornaRigaTableSpedizionieri(valori){
             }
         }
     }
+    hideExtraRows("tableSpedizionieri");
 }
 
 function handlerTableSpedizionieriRowClick(event){
@@ -271,6 +273,7 @@ function handlerTableSpedizionieriDeleteButtonClick(event){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 tr.parentNode.removeChild(tr);
+                hideExtraRows("tableSpedizionieri");
                 console.info("Eliminazione avvenuta con successo");
             } else{
                 console.error(httpReq.responseText);
@@ -286,6 +289,8 @@ function handlerTableSpedizionieriDeleteButtonClick(event){
 
 document.getElementById("tableSpedizionieri").tBodies[0].getElementsByTagName("i")[0];
 
+var isRicerca = false;
+
 function ricercaSpedizionieri(){
     var valoreDaRicercare = document.getElementById("searchFieldSpedizionieri").value.toLowerCase();
 
@@ -300,6 +305,9 @@ function ricercaSpedizionieri(){
             rows[i].style.display = "none";
         }
     }
+    isRicerca = true;
+    hideExtraRows("tableSpedizionieri");
+    isRicerca = false;
 }
 
 function caricaSpedizionieri(){
@@ -310,9 +318,10 @@ function caricaSpedizionieri(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaSpedizionieri = JSON.parse(httpReq.responseText);
-                for(var i=listaSpedizionieri.length, counter = 0; i > 0 && counter < 50; i--, counter++){
+                for(var i=listaSpedizionieri.length; i > 0; i--){
                     aggiungiRigaTableSpedizionieri(listaSpedizionieri[i-1]);
                 }
+                hideExtraRows("tableSpedizionieri");
                 console.info("Caricamento degli spedizionieri avvenuto con successo");
             } else{
                 console.error(httpReq.responseText);
@@ -631,6 +640,7 @@ function aggiungiRigaTableFornitori(valori){
     }
 
     tableFornitori.tBodies[0].insertBefore(tr, tableFornitori.tBodies[0].firstElementChild);
+    hideExtraRows("tableFornitori");
 }
 
 function aggiornaRigaTableFornitori(valori){
@@ -651,6 +661,7 @@ function aggiornaRigaTableFornitori(valori){
             }
         }
     }
+    hideExtraRows("tableFornitori");
 }
 
 function handlerTableFornitoriRowClick(event){
@@ -726,6 +737,7 @@ function handlerTableFornitoriDeleteButtonClick(event){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 tr.parentNode.removeChild(tr);
+                hideExtraRows("tableFornitori");
                 console.info("Eliminazione avvenuta con successo");
             } else{
                 console.error(httpReq.responseText);
@@ -741,6 +753,8 @@ function handlerTableFornitoriDeleteButtonClick(event){
 
 document.getElementById("tableFornitori").tBodies[0].getElementsByTagName("i")[0];
 
+var isRicerca = false;
+
 function ricercaFornitori(){
     var valoreDaRicercare = document.getElementById("searchFieldFornitori").value.toLowerCase();
 
@@ -755,6 +769,10 @@ function ricercaFornitori(){
             rows[i].style.display = "none";
         }
     }
+
+    isRicerca = true;
+    hideExtraRows("tableFornitori");
+    isRicerca = false;
 }
 
 function caricaFornitori(){
@@ -765,9 +783,10 @@ function caricaFornitori(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaFornitori = JSON.parse(httpReq.responseText);
-                for(var i=listaFornitori.length, counter = 0; i > 0 && counter < 50; i--, counter++){
+                for(var i=listaFornitori.length; i > 0; i--){
                     aggiungiRigaTableFornitori(listaFornitori[i-1]);
                 }
+                hideExtraRows("tableFornitori");
                 console.info("Caricamento dei fornitori avvenuto con successo");
             } else{
                 console.error(httpReq.responseText);
@@ -930,4 +949,17 @@ function handlerTableFornitoriHeaderClick(event){
 
     target.classList.add(sortDirection === 'asc' ? "sort-asc" : "sort-desc");
 
+}
+
+function hideExtraRows(tableName){
+    var rows = document.getElementById(tableName).tBodies[0].querySelectorAll("tr");
+    if(!isRicerca){
+        rows.forEach(function(row){
+            row.style.display = "";
+        });
+    }
+
+    for(var i=50; i < rows.length; i++){
+        rows[i].style.display = "none";
+    }
 }

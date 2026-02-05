@@ -69,6 +69,7 @@ function validateFormProdotti(fieldDaValidare){
                             removeErrorMessage(fieldElement);
                         } else{
                             addErrorMessage(fieldElement,"Deve essere un numero positivo");
+                            isCampoValid = false;
                         }
                     } else{
                     addErrorMessage(fieldElement, "Deve essere un numero valido");
@@ -200,6 +201,7 @@ function aggiungiRigaTableProdotti(valori){
     }
 
     tableProdotti.tBodies[0].insertBefore(tr, tableProdotti.tBodies[0].firstElementChild);
+    hideExtraRows("tableProdotti");
 }
 
 function aggiornaRigaTableProdotti(valori){
@@ -220,6 +222,7 @@ function aggiornaRigaTableProdotti(valori){
             }
         }
     }
+    hideExtraRows("tableProdotti");
 }
 
 function handlerTableProdottiRowClick(event){
@@ -291,6 +294,7 @@ function handlerTableProdottiDeleteButtonClick(event){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 tr.parentNode.removeChild(tr);
+                hideExtraRows("tableProdotti");
                 console.info("Eliminazione avvenuta con successo");
             } else{
                 console.error(httpReq.responseText);
@@ -306,6 +310,8 @@ function handlerTableProdottiDeleteButtonClick(event){
 
 document.getElementById("tableProdotti").tBodies[0].getElementsByTagName("i")[0];
 
+var isRicerca = false;
+
 function ricercaProdotti(){
     var valoreDaRicercare = document.getElementById("searchFieldProdotti").value.toLowerCase();
 
@@ -320,6 +326,9 @@ function ricercaProdotti(){
             rows[i].style.display = "none";
         }
     }
+    isRicerca = true;
+    hideExtraRows("tableProdotti");
+    isRicerca = false;
 }
 
 function caricaProdotti(){
@@ -330,9 +339,10 @@ function caricaProdotti(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaProdotti = JSON.parse(httpReq.responseText);
-                for(var i=listaProdotti.length, counter = 0; i > 0 && counter < 50; i--, counter++){
+                for(var i=listaProdotti.length; i > 0; i--){
                     aggiungiRigaTableProdotti(listaProdotti[i-1]);
                 }
+                hideExtraRows("tableProdotti");
                 console.info("Caricamento dei prodotti avvenuto con successo");
             } else{
                 console.error(httpReq.responseText);
@@ -430,7 +440,7 @@ tHeadProdotti.addEventListener('click', handlerTableProdottiHeaderClick);
 
 function handlerTableProdottiHeaderClick(event){
     event.preventDefault();
-    target = event.target;
+    var target = event.target;
 
     var fieldName = target.getAttribute("data-index");
     
@@ -627,6 +637,7 @@ function aggiungiRigaTableCategorie(valori){
     }
 
     tableCategorie.tBodies[0].insertBefore(tr, tableCategorie.tBodies[0].firstElementChild);
+    hideExtraRows("tableCategorie");
 }
 
 function aggiornaRigaTableCategorie(valori){
@@ -647,6 +658,7 @@ function aggiornaRigaTableCategorie(valori){
             }
         }
     }
+    hideExtraRows("tableCategorie");
 }
 
 function handlerTableCategorieRowClick(event){
@@ -711,6 +723,7 @@ function handlerTableCategorieDeleteButtonClick(event){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 tr.parentNode.removeChild(tr);
+                hideExtraRows("tableCategorie");
                 console.info("Eliminazione avvenuta con successo");
             } else{
                 console.error(httpReq.responseText);
@@ -740,6 +753,9 @@ function ricercaCategorie(){
             rows[i].style.display = "none";
         }
     }
+    isRicerca = true;
+    hideExtraRows("tableCategorie");
+    isRicerca = false;
 }
 
 function caricaCategorie(){
@@ -750,9 +766,10 @@ function caricaCategorie(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaCategorie = JSON.parse(httpReq.responseText);
-                for(var i=listaCategorie.length, counter = 0; i > 0 && counter < 50; i--, counter++){
+                for(var i=listaCategorie.length; i > 0; i--){
                     aggiungiRigaTableCategorie(listaCategorie[i-1]);
                 }
+                hideExtraRows("tableCategorie");
                 console.info("Caricamento delle categorie avvenuto con successo");
             } else{
                 console.error(httpReq.responseText);
@@ -851,7 +868,7 @@ tHeadCategorie.addEventListener('click',handlerTableCategorieHeaderClick);
 
 function handlerTableCategorieHeaderClick(event){
     event.preventDefault();
-    target = event.target;
+    var target = event.target;
 
     var fieldName = target.getAttribute("data-index");
 
@@ -916,4 +933,18 @@ function handlerTableCategorieHeaderClick(event){
     });
 
     target.classList.add(sortDirection === 'asc' ? "sort-asc" : "sort-desc");
+}
+
+function hideExtraRows(tableName){
+    var rows = document.getElementById(tableName).tBodies[0].querySelectorAll("tr");
+
+    if(!isRicerca){
+        rows.forEach(function(row){
+            row.style.display = "";
+        });
+    }
+
+    for(var i=50; i < rows.length; i++){
+        rows[i].style.display = "none";
+    }
 }

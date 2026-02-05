@@ -265,7 +265,7 @@ function aggiungiRigaTableDipendenti(valori){
     }
 
     tableDipendenti.tBodies[0].insertBefore(tr, tableDipendenti.tBodies[0].firstElementChild);
-
+    hideExtraRows();
 }
 
 function aggiornaRigaTableDipendenti(valori){
@@ -295,6 +295,7 @@ function aggiornaRigaTableDipendenti(valori){
             }
         }
     }
+    hideExtraRows();
 }
 
 function handlerTableDipendentiRowClick(event){
@@ -391,6 +392,7 @@ function handlerTableDipendentiDeleteButtonClick(event){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 tr.parentNode.removeChild(tr);
+                hideExtraRows();
                 console.info("Eliminazione avvenuta con successo");
             } else{
                 console.error(httpReq.responseText);
@@ -403,6 +405,8 @@ function handlerTableDipendentiDeleteButtonClick(event){
     httpReq.send();
 
 }
+
+var isRicerca = false;
 
 function ricercaDipendenti(){
 
@@ -420,6 +424,9 @@ function ricercaDipendenti(){
         }
     }
 
+    isRicerca = true;
+    hideExtraRows();
+    isRicerca = false;
 }
 
 function caricaDipendenti(){
@@ -431,8 +438,9 @@ function caricaDipendenti(){
             if(httpReq.status === 200){
                 var listaDipendenti = JSON.parse(httpReq.responseText);                
                 setDipendenti(listaDipendenti);       
-                for(var i=listaDipendenti.length, counter = 0; i > 0 && counter < 50; i--, counter++){
+                for(var i=listaDipendenti.length; i > 0; i--){
                     aggiungiRigaTableDipendenti(listaDipendenti[i-1]);
+                    hideExtraRows();
                 }
                 console.info("Caricamento avvenuto con successo");
             } else{
@@ -603,4 +611,17 @@ function handlerTableDipendentiHeaderClick(event){
 
     target.classList.add(sortDirection === 'asc' ? "sort-asc" : "sort-desc");
 
+}
+
+function hideExtraRows(){
+    var rows = document.getElementById("tableDipendenti").tBodies[0].querySelectorAll("tr");
+    if(!isRicerca){
+        rows.forEach(function(row){
+            row.style.display = "";
+        });
+    }
+
+    for(var i=50; i < rows.length; i++){
+        rows[i].style.display = "none";
+    }
 }

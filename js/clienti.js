@@ -194,6 +194,7 @@ function aggiungiRigaTableClienti(valori){
     }
 
     tableClienti.tBodies[0].insertBefore(tr, tableClienti.tBodies[0].firstElementChild);
+    hideExtraRows();
 }
 
 function aggiornaRigaTableClienti(valori){
@@ -214,6 +215,7 @@ function aggiornaRigaTableClienti(valori){
             }
         }
     }
+    hideExtraRows();
 }
 
 function handlerTableClientiRowClick(event){
@@ -289,6 +291,7 @@ function handlerTableClientiDeleteButtonClick(event){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 tr.parentNode.removeChild(tr);
+                hideExtraRows();
                 console.info("Eliminazione avvenuta con successo");
             } else{
                 console.error(httpReq.responseText);
@@ -304,6 +307,8 @@ function handlerTableClientiDeleteButtonClick(event){
 
 document.getElementById("tableClienti").tBodies[0].getElementsByTagName("i")[0];
 
+var isRicerca = false;
+
 function ricercaClienti(){
     var valoreDaRicercare = document.getElementById("searchFieldClienti").value.toLowerCase();
 
@@ -318,6 +323,10 @@ function ricercaClienti(){
             rows[i].style.display = "none";
         }
     }
+
+    isRicerca = true;
+    hideExtraRows();
+    isRicerca = false;
 }
 
 function caricaClienti(){
@@ -328,9 +337,10 @@ function caricaClienti(){
         if(httpReq.readyState === 4){
             if(httpReq.status === 200){
                 var listaClienti = JSON.parse(httpReq.responseText);
-                for(var i=listaClienti.length, counter = 0; i > 0 && counter <50; i--, counter++){
+                for(var i=listaClienti.length; i > 0; i--){
                     aggiungiRigaTableClienti(listaClienti[i-1]);
                 }
+                hideExtraRows();
                 console.info("Caricamento dei clienti avvenuto con successo");
             } else{
                 console.error(httpReq.responseText);
@@ -491,4 +501,19 @@ function handlerTableClientiHeaderClick(event){
     });
 
     target.classList.add(sortDirection === 'asc' ? "sort-asc" : "sort-desc");
+
+    hideExtraRows();
+}
+
+function hideExtraRows(){
+    var rows = document.getElementById("tableClienti").tBodies[0].querySelectorAll("tr");
+    if(!isRicerca){
+        rows.forEach(function(row){
+            row.style.display = "";
+        });
+    }
+
+    for(var i=50; i < rows.length; i++){
+        rows[i].style.display = "none";
+    }
 }
