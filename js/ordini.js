@@ -688,8 +688,7 @@ function handlerFormDettaglioOrdineSubmitButtonClick(event){
                 valori[fieldIterato.name] = fieldIterato.value;
             }
         }
-        valori["ORDER_ID"] = document.getElementById("formDettaglioOrdine").querySelectorAll('input')[0].innerText;
-        console.log(valori["ORDER_ID"]);
+        valori["ORDER_ID"] = document.getElementById("ORDER_ID").value;
         valori["PRODUCT_NAME"] = risolviProdotti(parseInt(valori["PRODUCT_ID"])).name;
 
         function aggiungiOAggiornaDettaglioOrdineSuFile(valori,callback){
@@ -745,41 +744,6 @@ for(var indiceFormField = 0; indiceFormField < formDettaglioOrdineFields.length;
     formDettaglioOrdineFields[indiceFormField].addEventListener("blur", handlerFieldFormDettaglioOrdineChange);
 }
 
-
-function aggiungiRigaTableDettaglioOrdine(valori){
-    var tr = document.createElement("tr");
-
-    var tableDettaglioOrdine = document.getElementById("tableDettaglioOrdine");
-
-    var headerFieldList = tableDettaglioOrdine.tHead.getElementsByTagName("th");
-
-    var prodottiData = getProdotti();
-
-    for(var i = 0; i < headerFieldList.length; i++){
-        var fieldName = headerFieldList[i].getAttribute("data-index");
-        var td = document.createElement("td");
-
-        if(fieldName){
-            if(fieldName === "PRODUCT_NAME"){
-                var productName = risolviProdotti(valori["PRODUCT_ID"]);
-                td.innerHTML = productName.name;
-            } else if(valori[fieldName]){
-                td.innerHTML = valori[fieldName];
-            }
-        } else{
-            var iEl = document.createElement("i");
-            iEl.classList.add("fa");
-            iEl.classList.add("fa-trash");
-            iEl.style["font-size"]="16px";
-            iEl.addEventListener("click", handlerTableDettaglioOrdineDeleteButtonClick);
-            td.appendChild(iEl);
-        }
-        tr.appendChild(td);
-    }
-
-    tableDettaglioOrdine.tBodies[0].insertBefore(tr, tableDettaglioOrdine.tBodies[0].firstElementChild);
-}
-
 function aggiornaRigaTableDettaglioOrdine(valori){
 
     var tr = selectedRow;
@@ -791,15 +755,11 @@ function aggiornaRigaTableDettaglioOrdine(valori){
         var fieldName = headerFieldList[i].getAttribute("data-index");
 
         if(fieldName && fieldName !== ""){
-            if(valori[fieldName]){
-                if(fieldName === "PRODUCT_NAME"){
-                    var productName = risolviProdotti(valori["PRODUCT_ID"]);
-                    tDataList[i].innerHTML = productName.name;
-                } else{
-                    tDataList[i].innerHTML = valori[fieldName];
-                }
-            } else{
-                tDataList[i].innerHTML = "";
+            if(fieldName === "PRODUCT_NAME"){
+                var nomeProdotto = risolviProdotti(valori["PRODUCT_ID"]);
+                tDataList[i].innerHTML = nomeProdotto.name;
+            } else if(valori[fieldName]){
+                tDataList[i].innerHTML = valori[fieldName];
             }
         } else{
             tDataList[i].innerHTML = "";
@@ -862,7 +822,8 @@ function handlerTableDettaglioOrdineDeleteButtonClick(event){
 
     var tr = target.parentNode.parentNode;
 
-    var orderId = tr.firstElementChild.innerText;
+    var productId = tr.firstElementChild.innerText;
+    var orderId = document.getElementById("ORDER_ID").value;
 
     var httpReq = new XMLHttpRequest();
 
@@ -878,7 +839,7 @@ function handlerTableDettaglioOrdineDeleteButtonClick(event){
         }
     }
 
-    httpReq.open("DELETE", "json/dettagli_ordini.json?ORDER_ID="+orderId);
+    httpReq.open("DELETE", "json/dettagli_ordini.json?PRODUCT_ID="+productId+"&ORDER_ID="+orderId);
 
     httpReq.send();
 }
@@ -891,12 +852,12 @@ function aggiungiRigaTableDettaglioOrdine(valori){
         var fieldName = headerFieldList[i].getAttribute("data-index");
         var td = document.createElement("td");
         if(fieldName){
-            if(valori[fieldName]){
-                td.innerHTML = valori[fieldName];
-            }else if(fieldName === "PRODUCT_NAME"){
+            if(fieldName === "PRODUCT_NAME"){
                 var nomeProdotto = risolviProdotti(valori["PRODUCT_ID"]);
                 td.innerHTML = nomeProdotto.name;
-            } 
+            } else if(valori[fieldName]){
+                td.innerHTML = valori[fieldName];
+            }
         } else{
             var iEl = document.createElement("i");
             iEl.classList.add("fa");
@@ -908,7 +869,7 @@ function aggiungiRigaTableDettaglioOrdine(valori){
         tr.appendChild(td);
     }
     var tbody = tableDettaglioOrdine.tBodies[0];
-    tbody.appendChild(tr);
+    tbody.insertBefore(tr, tbody.firstElementChild);
 }
 
 function caricaDettaglioOrdine(orderId){

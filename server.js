@@ -123,29 +123,47 @@ if (typeof require !== 'undefined' && typeof module !== 'undefined' && !global.w
       console.log(`DELETE request for: ${entity}, query params:`, req.query);
       if (!entities.includes(entity)) return res.status(400).json({ error: 'Invalid entity' });
 
-      let idField = 'ID';
-      if (entity === 'dipendenti') idField = 'EMPLOYEE_ID';
-      else if (entity === 'clienti') idField = 'CUSTOMER_ID';
-      else if (entity === 'ordini') idField = 'ORDER_ID';
-      else if (entity === 'prodotti') idField = 'PRODUCT_ID';
-      else if (entity === 'categorie') idField = 'CATEGORY_ID';
-      else if (entity === 'fornitori') idField = 'SUPPLIER_ID';
-      else if (entity === 'spedizionieri') idField = 'SHIPPER_ID';
-      else if (entity === 'dettagli_ordini') idField = 'ORDER_DETAIL_ID';
-
-      // Accept both ?id= and entity-specific ID field name
-      const id = req.query.id || req.query[idField];
-      if (!id) return res.status(400).json({ error: `${idField} or 'id' required as query parameter` });
-
       const data = readJSON(entity);
-      const filtered = data.filter((item) => String(item[idField]) !== String(id));
+      let filtered;
 
-      if (filtered.length === data.length) {
-        return res.status(404).json({ error: 'Record not found' });
+      // Special handling for dettagli_ordini with composite key (ORDER_ID + PRODUCT_ID)
+      if (entity === 'dettagli_ordini') {
+        const orderId = req.query.ORDER_ID;
+        const productId = req.query.PRODUCT_ID;
+        
+        if (!orderId || !productId) {
+          return res.status(400).json({ error: 'ORDER_ID and PRODUCT_ID required as query parameters' });
+        }
+
+        filtered = data.filter((item) => !(String(item.ORDER_ID) === String(orderId) && String(item.PRODUCT_ID) === String(productId)));
+
+        if (filtered.length === data.length) {
+          return res.status(404).json({ error: 'Record not found' });
+        }
+      } else {
+        // Standard single-key delete for other entities
+        let idField = 'ID';
+        if (entity === 'dipendenti') idField = 'EMPLOYEE_ID';
+        else if (entity === 'clienti') idField = 'CUSTOMER_ID';
+        else if (entity === 'ordini') idField = 'ORDER_ID';
+        else if (entity === 'prodotti') idField = 'PRODUCT_ID';
+        else if (entity === 'categorie') idField = 'CATEGORY_ID';
+        else if (entity === 'fornitori') idField = 'SUPPLIER_ID';
+        else if (entity === 'spedizionieri') idField = 'SHIPPER_ID';
+
+        // Accept both ?id= and entity-specific ID field name
+        const id = req.query.id || req.query[idField];
+        if (!id) return res.status(400).json({ error: `${idField} or 'id' required as query parameter` });
+
+        filtered = data.filter((item) => String(item[idField]) !== String(id));
+
+        if (filtered.length === data.length) {
+          return res.status(404).json({ error: 'Record not found' });
+        }
       }
 
       writeJSON(entity, filtered);
-      res.json({ deleted: id, entity });
+      res.json({ deleted: entity === 'dettagli_ordini' ? `${req.query.ORDER_ID}_${req.query.PRODUCT_ID}` : req.query.id, entity });
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Delete failed' });

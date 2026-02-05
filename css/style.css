@@ -52,9 +52,9 @@ body{
     font-size: 14px;
 }
 
-#main #tableDipendenti{
-    width: 1200px !important;
-    max-width: 1200px !important;
+#main #tableDipendenti, #main #tableFornitori{
+    width: 1000px !important;
+    max-width: 1000px !important;
     table-layout: fixed !important;
     display: block !important;
     overflow: auto;
